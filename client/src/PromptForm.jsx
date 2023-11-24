@@ -29,7 +29,7 @@ function PromptForm() {
                 Blender
             </label>
             <br/>
-            <label> Kitchen Equipment::
+            <label> Kitchen Equipment:
                 <input type="checkbox"/>
                 Pan(s)
                 <input type="checkbox"/>
