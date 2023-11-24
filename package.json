@@ -1,0 +1,16 @@
+{
+  "name": "recipe-ready",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server/test_openai.js",
+  "type": "module",
+  "scripts": {
+    "dev": "node server/index.js"
+  },
+  "author": "Quienten Miller",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.18.2",
+    "openai": "^4.20.0"
+  }
+}
