@@ -54,7 +54,7 @@ main::-webkit-scrollbar-thumb {
   background: #6649b8;
 }
 
-form {
+form.chat-form {
   height: 10vh;
   position: fixed;
   bottom: 0;
@@ -65,13 +65,13 @@ form {
   font-size: 1.5rem;
 }
 
-form button {
+form.chat-form button {
   width: 20%;
   background-color: rgb(56, 56, 143);
 }
 
 
-input {
+input.chat-form {
   line-height: 1.5;
   width: 100%;
   font-size: 1.5rem;
@@ -163,4 +163,8 @@ img {
 
 .chef {
   transform: scale(1.25);
+}
+
+.what-to-cook {
+  color: white;
 }
