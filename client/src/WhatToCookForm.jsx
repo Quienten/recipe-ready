@@ -16,6 +16,8 @@ function WhatToCookForm({addNewMessage}) {
         { id: "6", value: "Blender" },
     ];
 
+    const [mealType, setMealType] = useState("Dinner");
+
     const [ingredients, setIngredients] = useState("")
 
     const handleName = (event) => {
@@ -40,6 +42,10 @@ function WhatToCookForm({addNewMessage}) {
         }
     };
 
+    const handleMealType = (event) => {
+        setSkillLevel(event.target.value)
+    }
+
     const handleIngredients = (event) => {
         setIngredients(event.target.value)
     }
@@ -60,21 +66,34 @@ function WhatToCookForm({addNewMessage}) {
             return
         }
 
-        const data = {
+        const formData = {
             name: name,
             skillLevel: skillLevel,
-            checkedAppliances: checkedAppliances,
+            appliances: checkedAppliances,
+            mealType: mealType,
             ingredients: ingredients
         }
 
-        console.log(data)
+        // console.log(data)
 
         // fetch("/api")
         //     //.then((res) => console.log(res.json()))
         //     .then((res) => res.json())
         //     .then((data) => setData(data.message.content));
 
-        addNewMessage({id: 2, text: "Very cool!", type: "chat", author: "ai"})
+        const serializedBody = JSON.stringify(formData);
+        const fetchOptions = {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: serializedBody
+        };
+
+        fetch('/what_to_cook', fetchOptions)
+            .then((res) => res.json())
+            .then((data) => addNewMessage({id: 2, text: data.message.content, type: "chat", author: "ai"}))
+
+
+
     }
 
     return (
@@ -88,6 +107,12 @@ function WhatToCookForm({addNewMessage}) {
                     <input type="radio" name="skill" value={3}/> 3
                     <input type="radio" name="skill" value={4}/> 4
                     <input type="radio" name="skill" value={5}/> 5
+                </label>
+                <br/>
+                <label onChange={handleMealType}> This meal is for:
+                    <input type="radio" name="mealType" value={"Breakfast"}/> Breakfast
+                    <input type="radio" name="mealType" value={"Lunch"}/> Lunch
+                    <input type="radio" name="mealType" value={"Dinner"}/> Dinner
                 </label>
                 <br/>
                 <label> Kitchen Appliances: </label>
