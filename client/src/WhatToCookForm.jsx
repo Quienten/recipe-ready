@@ -90,7 +90,7 @@ function WhatToCookForm({addNewMessage}) {
 
         fetch('/what_to_cook', fetchOptions)
             .then((res) => res.json())
-            .then((data) => addNewMessage({id: 2, text: data.message.content, type: "chat", author: "ai"}))
+            .then((data) => addNewMessage({id: 3, text: data.message.content, type: "chat", author: "ai"}))
 
 
 

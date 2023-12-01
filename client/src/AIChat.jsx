@@ -10,7 +10,7 @@ function AIChat() {
 
     const [messages, setMessages] = useState([
         {id: 1, text: FIRST_MSG, type: "chat", author: "ai"},
-        {type: "what_to_cook", author: "ai"},
+        {id: 2, type: "what_to_cook", author: "ai"},
     ])
 
     function addNewMessage(newMessage) {
@@ -25,7 +25,7 @@ function AIChat() {
                     case 'chat':
                         return <ChatMessage key={msg.id} message={msg}/>
                     case 'what_to_cook':
-                        return <WhatToCookForm addNewMessage={addNewMessage}/>
+                        return <WhatToCookForm key={msg.id} addNewMessage={addNewMessage}/>
                 }
 
             })}
