@@ -1,4 +1,5 @@
 import React, {useState} from "react";
+import Button from '@mui/material/Button';
 
 function WhatToCookForm({addNewMessage}) {
 
@@ -43,7 +44,7 @@ function WhatToCookForm({addNewMessage}) {
     };
 
     const handleMealType = (event) => {
-        setSkillLevel(event.target.value)
+        setMealType(event.target.value)
     }
 
     const handleIngredients = (event) => {
@@ -73,13 +74,6 @@ function WhatToCookForm({addNewMessage}) {
             mealType: mealType,
             ingredients: ingredients
         }
-
-        // console.log(data)
-
-        // fetch("/api")
-        //     //.then((res) => console.log(res.json()))
-        //     .then((res) => res.json())
-        //     .then((data) => setData(data.message.content));
 
         const serializedBody = JSON.stringify(formData);
         const fetchOptions = {
@@ -130,18 +124,16 @@ function WhatToCookForm({addNewMessage}) {
                     );
                 })}
                 <br/>
-                {/*<label> Kitchen Equipment:*/}
-                {/*    <input type="checkbox"/>*/}
-                {/*    Pan(s)*/}
-                {/*    <input type="checkbox"/>*/}
-                {/*    Pot(s)*/}
-                {/*    <input type="checkbox"/>*/}
-                {/*    Dutch Oven*/}
-                {/*</label>*/}
-                {/*<br/>*/}
                 <label>What ingredients do you have? <input type="text" name="ingredients" onChange={handleIngredients}/></label>
                 <br/>
-                <input type="submit" value="Submit" />
+                <Button
+                    type="submit"
+                    fullWidth
+                    variant="contained"
+                    sx={{ mt: 3, mb: 2 }}
+                >
+                Submit
+                </Button>
             </form>
         </div>
     );
