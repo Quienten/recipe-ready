@@ -1,5 +1,10 @@
 import React, {useState} from "react";
 import Button from '@mui/material/Button';
+import Chip from "@mui/material/Chip";
+import Stack from "@mui/material/Stack";
+import DoneIcon from '@mui/icons-material/Done';
+import TextField from '@mui/material/TextField';
+import {Box, FormControl, Typography} from "@mui/material";
 
 function WhatToCookForm({addNewMessage}) {
 
@@ -8,15 +13,18 @@ function WhatToCookForm({addNewMessage}) {
     const [skillLevel, setSkillLevel] = useState(1)
 
     const [checkedAppliances, setCheckedAppliances] = useState([]);
-    const applianceData = [
-        { id: "1", value: "Stove" },
-        { id: "2", value: "Microwave" },
-        { id: "3", value: "Air Fryer" },
-        { id: "4", value: "Food Processor" },
-        { id: "5", value: "Rice Cooker" },
-        { id: "6", value: "Blender" },
+    const defaultApplianceData = [
+        { id: "1", value: "Stove", selected: false},
+        { id: "2", value: "Microwave", selected: false},
+        { id: "3", value: "Air Fryer", selected: false},
+        { id: "4", value: "Food Processor", selected: false},
+        { id: "5", value: "Rice Cooker", selected: false},
+        { id: "6", value: "Blender", selected: false},
     ];
+    const [applianceData, setApplianceData] = useState(defaultApplianceData);
 
+    const mealOptions = ["Breakfast", "Lunch", "Dinner"]
+    const [mealSelected, setMealSelected] = useState(2); //Dinner is default
     const [mealType, setMealType] = useState("Dinner");
 
     const [ingredients, setIngredients] = useState("")
@@ -29,7 +37,15 @@ function WhatToCookForm({addNewMessage}) {
         setSkillLevel(event.target.value)
     }
 
-    const handleAppliance = (event) => {
+    const handleAppliance = (event, index) => {
+        const updateApplianceData = applianceData.map((elem, i) => {
+            if (i === index) {
+                // Flip selected
+                elem.selected = !elem.selected
+            }
+            return elem;
+        });
+
         const value = event.target.value;
         const isChecked = event.target.checked;
 
@@ -92,39 +108,70 @@ function WhatToCookForm({addNewMessage}) {
 
     return (
         <div>
-            <form className="what-to-cook" onSubmit={submit}>
-                <label>Name:</label><input type="text" name="name" onChange={handleName}/>
+            <FormControl
+                className="what-to-cook"
+                onSubmit={submit}>
+                <TextField
+                    label="Name"
+                    variant="standard"
+                    value={name}
+                    onChange={(e) => {setName(e.target.value)}}
+                />
                 <br/>
-                <label onChange={handleSkill}> Cooking Skill Level:
-                    <input type="radio" name="skill" value={1}/> 1
-                    <input type="radio" name="skill" value={2}/> 2
-                    <input type="radio" name="skill" value={3}/> 3
-                    <input type="radio" name="skill" value={4}/> 4
-                    <input type="radio" name="skill" value={5}/> 5
-                </label>
-                <br/>
-                <label onChange={handleMealType}> This meal is for:
-                    <input type="radio" name="mealType" value={"Breakfast"}/> Breakfast
-                    <input type="radio" name="mealType" value={"Lunch"}/> Lunch
-                    <input type="radio" name="mealType" value={"Dinner"}/> Dinner
-                </label>
-                <br/>
-                <label> Kitchen Appliances: </label>
-                {applianceData.map((item, index) => {
-                    return (
-                        <div key={item.id} className="checkbox-container">
-                            <input
-                                type="checkbox"
-                                name="languages"
-                                value={item.value}
-                                onChange={handleAppliance}
+                <label onChange={handleSkill}> Cooking Skill Level: </label>
+                <Stack direction="row" spacing={1}>
+                    {[1,2,3,4,5].map((item, index) => {
+                        return (
+                            <Chip key={index}
+                                  label={item}
+                                  onClick={(e) => setSkillLevel(item)}
+                                  variant={item === skillLevel ? "" : "outlined"}
                             />
-                            <label>{item.value}</label>
-                        </div>
-                    );
-                })}
+                        );
+                    })}
+                </Stack>
                 <br/>
-                <label>What ingredients do you have? <input type="text" name="ingredients" onChange={handleIngredients}/></label>
+                <label onChange={handleMealType}> This meal is for:</label>
+                    <Stack direction="row" spacing={1}>
+                        {mealOptions.map((item, index) => {
+                            return (
+                                <Chip key={index}
+                                      label={item}
+                                      onClick={(e) => setMealSelected(index)}
+                                      icon={index === mealSelected ? <DoneIcon /> : null}
+                                      variant={index === mealSelected ? "" : "outlined"}
+                                />
+                            );
+                        })}
+                    </Stack>
+
+                <br/>
+                <Typography level="title-lg" mb={2}>
+                    Kitchen Appliances:
+                </Typography>
+                <Box
+                    role="group"
+                    sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}
+                >
+                    {applianceData.map((item, index) => {
+                        return (
+                            <Chip key={index}
+                                  label={item.value}
+                                  onClick={(e) => handleAppliance(e, index)}
+                                  icon={item.selected ? <DoneIcon /> : null}
+                                  variant={item.selected ? "" : "outlined"}
+                            />
+                        );
+                    })}
+                </Box>
+                <br/>
+                <label>What ingredients do you have?</label>
+                <TextField
+                    label="Ingredients"
+                    variant="standard"
+                    value={ingredients}
+                    onChange={handleIngredients}
+                />
                 <br/>
                 <Button
                     type="submit"
@@ -134,7 +181,7 @@ function WhatToCookForm({addNewMessage}) {
                 >
                 Submit
                 </Button>
-            </form>
+            </FormControl>
         </div>
     );
 }
