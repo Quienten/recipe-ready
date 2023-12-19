@@ -1,6 +1,5 @@
 import ChatMessage from "./ChatMessage";
 import {useState} from "react";
-import PromptForm from "./PromptForm";
 import WhatToCookForm from "./WhatToCookForm";
 
 const FIRST_MSG = "Hello, I am Chef Marcus, I will be helping you cook today! Please provide me your personal goals for this meal."
@@ -20,17 +19,15 @@ function AIChat() {
     return (<>
         <main>
 
-            {messages.map(msg => {
+            {messages.map((msg, i) => {
                 switch(msg.type) {
                     case 'chat':
-                        return <ChatMessage key={msg.id} message={msg}/>
+                        return <ChatMessage key={i} message={msg}/>
                     case 'what_to_cook':
-                        return <WhatToCookForm key={msg.id} addNewMessage={addNewMessage}/>
+                        return <WhatToCookForm key={i} addNewMessage={addNewMessage}/>
                 }
 
             })}
-
-            {/*<WhatToCookForm></WhatToCookForm>*/}
 
         </main>
 

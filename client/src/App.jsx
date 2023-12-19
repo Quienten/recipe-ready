@@ -1,6 +1,5 @@
 import React from "react";
 import './App.css';
-import PromptForm from "./PromptForm"
 import AIChat from "./AIChat"
 import Button from "@mui/material/Button";
 
