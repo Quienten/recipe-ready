@@ -4,7 +4,7 @@ import Chip from "@mui/material/Chip";
 import Stack from "@mui/material/Stack";
 import DoneIcon from '@mui/icons-material/Done';
 import TextField from '@mui/material/TextField';
-import {Box, FormControl, Typography} from "@mui/material";
+import {Box, Container, Grid, Paper, Typography} from "@mui/material";
 
 function WhatToCookForm({addNewMessage}) {
 
@@ -76,6 +76,7 @@ function WhatToCookForm({addNewMessage}) {
     }
 
     function submit(event) {
+        console.log("submitted")
         event.preventDefault()
 
         if(!validateData()) {
@@ -107,82 +108,118 @@ function WhatToCookForm({addNewMessage}) {
     }
 
     return (
-        <div>
-            <FormControl
-                className="what-to-cook"
-                onSubmit={submit}>
-                <TextField
-                    label="Name"
-                    variant="standard"
-                    value={name}
-                    onChange={(e) => {setName(e.target.value)}}
-                />
-                <br/>
-                <label onChange={handleSkill}> Cooking Skill Level: </label>
-                <Stack direction="row" spacing={1}>
-                    {[1,2,3,4,5].map((item, index) => {
-                        return (
-                            <Chip key={index}
-                                  label={item}
-                                  onClick={(e) => setSkillLevel(item)}
-                                  variant={item === skillLevel ? "" : "outlined"}
-                            />
-                        );
-                    })}
-                </Stack>
-                <br/>
-                <label onChange={handleMealType}> This meal is for:</label>
-                    <Stack direction="row" spacing={1}>
-                        {mealOptions.map((item, index) => {
-                            return (
-                                <Chip key={index}
-                                      label={item}
-                                      onClick={(e) => setMealSelected(index)}
-                                      icon={index === mealSelected ? <DoneIcon /> : null}
-                                      variant={index === mealSelected ? "" : "outlined"}
-                                />
-                            );
-                        })}
-                    </Stack>
-
-                <br/>
-                <Typography level="title-lg" mb={2}>
-                    Kitchen Appliances:
-                </Typography>
+        <Container
+            spacing={0}
+        >
+            <Paper
+                elevation={3}
+                sx={{
+                    my: { xs: 3, md: 2 },
+                    p: { xs: 2, md: 3 }
+                }}
+            >
                 <Box
-                    role="group"
-                    sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}
+                    component="form"
+                    onSubmit={submit}
+                    className="what-to-cook"
                 >
-                    {applianceData.map((item, index) => {
-                        return (
-                            <Chip key={index}
-                                  label={item.value}
-                                  onClick={(e) => handleAppliance(e, index)}
-                                  icon={item.selected ? <DoneIcon /> : null}
-                                  variant={item.selected ? "" : "outlined"}
+                    <Grid container spacing={2}>
+                        <Grid item xs={12}>
+                            <TextField
+                                label="Name"
+                                variant="standard"
+                                value={name}
+                                onChange={(e) => {
+                                    setName(e.target.value)
+                                }}
+                                fullWidth
                             />
-                        );
-                    })}
+                        </Grid>
+                        <Grid item xs={5}>
+                            <Typography align="left"> Cooking Skill Level: </Typography>
+                        </Grid>
+                        <Grid item xs={7}>
+                            <Stack direction="row" spacing={1}>
+                                {[1, 2, 3, 4, 5].map((item, index) => {
+                                    return (
+                                        <Chip key={index}
+                                              label={item}
+                                              onClick={(e) => setSkillLevel(item)}
+                                              variant={item === skillLevel ? "" : "outlined"}
+                                        />
+                                    );
+                                })}
+                            </Stack>
+                        </Grid>
+                        <Grid item xs={5}>
+                            <Typography align="left"> This meal is for:</Typography>
+                        </Grid>
+                        <Grid item xs={7}>
+                            <Stack direction="row" spacing={1}>
+                                {mealOptions.map((item, index) => {
+                                    return (
+                                        <Chip key={index}
+                                              label={item}
+                                              onClick={(e) => setMealSelected(index)}
+                                              icon={index === mealSelected ? <DoneIcon/> : null}
+                                              variant={index === mealSelected ? "" : "outlined"}
+                                        />
+                                    );
+                                })}
+                            </Stack>
+                        </Grid>
+                        <Grid item xs={5}>
+                            <Typography
+                                align="left"
+                            >
+                                Kitchen Appliances:
+                            </Typography>
+                        </Grid>
+                        <Grid item xs={7}>
+                            <Box
+                                role="group"
+                                sx={{display: 'flex', flexWrap: 'wrap', gap: 1}}
+                            >
+                                {applianceData.map((item, index) => {
+                                    return (
+                                        <Chip key={index}
+                                              label={item.value}
+                                              onClick={(e) => handleAppliance(e, index)}
+                                              icon={item.selected ? <DoneIcon/> : null}
+                                              variant={item.selected ? "" : "outlined"}
+                                        />
+                                    );
+                                })}
+                            </Box>
+                        </Grid>
+                        <Grid item xs={5}>
+                            <Typography align="left">What ingredients do you have?</Typography>
+                        </Grid>
+                        <Grid item xs={7}>
+                            <TextField
+                                label="Ingredients"
+                                variant="standard"
+                                value={ingredients}
+                                onChange={handleIngredients}
+                                fullWidth
+                                required
+                            />
+                        </Grid>
+                        <Grid item xs={12}>
+                            <Button
+                                type="submit"
+                                fullWidth
+                                variant="contained"
+                                sx={{mt: 3, mb: 2}}
+                            >
+                                Submit
+                            </Button>
+                        </Grid>
+                    </Grid>
                 </Box>
-                <br/>
-                <label>What ingredients do you have?</label>
-                <TextField
-                    label="Ingredients"
-                    variant="standard"
-                    value={ingredients}
-                    onChange={handleIngredients}
-                />
-                <br/>
-                <Button
-                    type="submit"
-                    fullWidth
-                    variant="contained"
-                    sx={{ mt: 3, mb: 2 }}
-                >
-                Submit
-                </Button>
-            </FormControl>
-        </div>
+            </Paper>
+        </Container>
+
     );
 }
 
