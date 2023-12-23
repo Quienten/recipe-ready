@@ -1,11 +1,14 @@
 import ChatMessage from "./ChatMessage";
 import {useState} from "react";
 import WhatToCookForm from "./WhatToCookForm";
+import {CircularProgress, Container} from "@mui/material";
 
 const FIRST_MSG = "Hello, I am Chef Marcus, I will be helping you cook today! Please provide me your personal goals for this meal."
 
 function AIChat() {
     const [formValue, setFormValue] = useState('');
+
+    const [waiting, setWaiting] = useState(false)
 
     const [messages, setMessages] = useState([
         {id: 1, text: FIRST_MSG, type: "chat", author: "ai"},
@@ -17,19 +20,21 @@ function AIChat() {
     }
 
     return (<>
-        <main>
+        <Container component="main">
 
             {messages.map((msg, i) => {
                 switch(msg.type) {
                     case 'chat':
                         return <ChatMessage key={i} message={msg}/>
                     case 'what_to_cook':
-                        return <WhatToCookForm key={i} addNewMessage={addNewMessage}/>
+                        return <WhatToCookForm key={i} addNewMessage={addNewMessage} setWaiting={setWaiting}/>
                 }
 
             })}
 
-        </main>
+            {waiting && <CircularProgress />}
+
+        </Container>
 
 
         <form className="chat-form">

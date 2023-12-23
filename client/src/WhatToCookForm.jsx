@@ -6,11 +6,13 @@ import DoneIcon from '@mui/icons-material/Done';
 import TextField from '@mui/material/TextField';
 import {Box, Container, Grid, Paper, Typography} from "@mui/material";
 
-function WhatToCookForm({addNewMessage}) {
+function WhatToCookForm({addNewMessage, setWaiting}) {
 
     const [name, setName] = useState("")
 
     const [skillLevel, setSkillLevel] = useState(1)
+
+    const [complete, setComplete] = useState(false)
 
     const defaultApplianceData = [
         { id: "1", value: "Stove", selected: true},
@@ -73,11 +75,13 @@ function WhatToCookForm({addNewMessage}) {
         return true
     }
 
-    function submit(event) {
+    async function submit(event) {
         console.log("submitted")
         event.preventDefault()
 
-        if(!validateData()) {
+        setComplete(true)
+
+        if (!validateData()) {
             addNewMessage({id: 2, text: "Invalid data", type: "chat", author: "ai"})
             return
         }
@@ -90,18 +94,20 @@ function WhatToCookForm({addNewMessage}) {
             ingredients: ingredients
         }
 
+        setWaiting(true)
+
         const serializedBody = JSON.stringify(formData);
         const fetchOptions = {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            headers: {'Content-Type': 'application/json'},
             body: serializedBody
         };
 
-        fetch('/what_to_cook', fetchOptions)
+        await fetch('/what_to_cook', fetchOptions)
             .then((res) => res.json())
             .then((data) => addNewMessage({id: 3, text: data.message.content, type: "chat", author: "ai"}))
 
-
+        setWaiting(false);
 
     }
 
@@ -209,6 +215,7 @@ function WhatToCookForm({addNewMessage}) {
                                 fullWidth
                                 variant="contained"
                                 sx={{mt: 3, mb: 2}}
+                                disabled={complete}
                             >
                                 Submit
                             </Button>
