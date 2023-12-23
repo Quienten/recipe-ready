@@ -1,6 +1,7 @@
 import ChatMessage from "./ChatMessage";
 import {useState} from "react";
 import WhatToCookForm from "./WhatToCookForm";
+import RecipeResponse from "./RecipeResponse";
 import {CircularProgress, Container} from "@mui/material";
 
 const FIRST_MSG = "Hello, I am Chef Marcus, I will be helping you cook today! Please provide me your personal goals for this meal."
@@ -11,8 +12,9 @@ function AIChat() {
     const [waiting, setWaiting] = useState(false)
 
     const [messages, setMessages] = useState([
-        {id: 1, text: FIRST_MSG, type: "chat", author: "ai"},
-        {id: 2, type: "what_to_cook", author: "ai"},
+        {text: FIRST_MSG, type: "chat", author: "ai"},
+        {type: "what_to_cook", author: "ai"},
+        {type: 'recipe_response'}
     ])
 
     function addNewMessage(newMessage) {
@@ -28,6 +30,8 @@ function AIChat() {
                         return <ChatMessage key={i} message={msg}/>
                     case 'what_to_cook':
                         return <WhatToCookForm key={i} addNewMessage={addNewMessage} setWaiting={setWaiting}/>
+                    case 'recipe_response':
+                        return <RecipeResponse key={i}/>
                 }
 
             })}
