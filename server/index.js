@@ -12,6 +12,11 @@ const openai = new OpenAI({
     apiKey: process.env.OPENAI_API_KEY,
 });
 
+const ASSISTANT_DESCRIPTION =
+`You are a chef that wants to share their recipes with ordinary people.
+Your name is Marcus.`
+
+
 const WHAT_TO_COOK_PROMPT =
 `Hello, my name is {name},
 I would rate my cooking skills a {skillLevel} out of 5.
@@ -20,9 +25,26 @@ I am looking for something to cook for {mealType}.
 I possess {ingredients}.
 Can you suggest a dish to make?`
 
+const ANOTHER_PROMPT =  "Please give me another recipe with the information I provided."
+
+let messages = [{"role": "system", "content": ASSISTANT_DESCRIPTION}]
+
+function formatMessage(type, prompt) {
+    return {role: type, content: prompt}
+}
+
+function getUserMessage(prompt) {
+    return formatMessage("user", prompt)
+}
+
+function getAIMessage(prompt) {
+    return formatMessage("assistant", prompt)
+}
+
 
 app.post('/what_to_cook', async (req, res) => {
     console.log(req.body)
+    messages = []
     let userPrompt = WHAT_TO_COOK_PROMPT
     for (const elem of Object.entries(req.body)) {
         const key = elem[0]
@@ -39,15 +61,16 @@ app.post('/what_to_cook', async (req, res) => {
         }
         userPrompt = userPrompt.replace("{"+key+"}", value)
     }
-    console.log(userPrompt)
+
+    messages.push(getUserMessage(userPrompt))
+    console.log(messages)
 
     const completion = await openai.chat.completions.create({
         model: "gpt-3.5-turbo",
-        messages: [
-            {role: "user", content: userPrompt},
-
-        ]
+        messages: messages
     })
+
+    messages.push(completion.choices[0].message)
 
     res.status(200) //SUCCESS
     res.json({
@@ -56,24 +79,27 @@ app.post('/what_to_cook', async (req, res) => {
 
 })
 
-app.get("/api", async (req, res) => {
+app.get("/another", async (req, res) => {
+    let userPrompt = ANOTHER_PROMPT
+
+    messages.push(getUserMessage(userPrompt))
+
+    console.log(messages)
 
     const completion = await openai.chat.completions.create({
         model: "gpt-3.5-turbo",
-        messages: [
-            {role: "user", content: PROMPT},
-
-        ]
+        messages: messages
     })
+
+    messages.push(completion.choices[0].message)
 
     res.json({
         message: completion.choices[0].message
     })
-});
+})
 
 app.listen(PORT, () => {
     console.log(`Server listening on ${PORT}`);
 });
-
 
 

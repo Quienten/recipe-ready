@@ -4,8 +4,8 @@ import {Avatar, Container, Grid, Typography} from "@mui/material";
 function ChatMessage(props) {
     const { text, type} = props.message;
 
-    return (<>
-        <Container className={`message ${type}`}>
+    return (
+        <Container className={`message ${type}`} sx={{my: 3}}>
             <Grid container spacing={2}>
                 <Grid item xs={1}>
                     <Avatar src={chef_icon} className={`chef`}/>
@@ -18,7 +18,7 @@ function ChatMessage(props) {
             </Grid>
 
         </Container>
-    </>)
+    )
 }
 
 export default ChatMessage

@@ -6,7 +6,7 @@ import DoneIcon from '@mui/icons-material/Done';
 import TextField from '@mui/material/TextField';
 import {Box, Container, Grid, Paper, Typography} from "@mui/material";
 
-function WhatToCookForm({addNewMessage, setWaiting}) {
+function WhatToCookForm({messages, setMessages, setWaiting}) {
 
     const [name, setName] = useState("")
 
@@ -31,14 +31,6 @@ function WhatToCookForm({addNewMessage, setWaiting}) {
 
     const [ingredients, setIngredients] = useState("")
 
-    const handleName = (event) => {
-        setName(event.target.value)
-    }
-
-    const handleSkill = (event) => {
-        setSkillLevel(event.target.value)
-    }
-
     const handleAppliance = (event, index) => {
         const updatedApplianceData = applianceData.map((elem, i) => {
             if (i === index) {
@@ -59,10 +51,6 @@ function WhatToCookForm({addNewMessage, setWaiting}) {
         setCheckedAppliances(newChecked);
     };
 
-    const handleMealType = (event) => {
-        setMealType(event.target.value)
-    }
-
     const handleIngredients = (event) => {
         setIngredients(event.target.value)
     }
@@ -82,7 +70,8 @@ function WhatToCookForm({addNewMessage, setWaiting}) {
         setComplete(true)
 
         if (!validateData()) {
-            addNewMessage({id: 2, text: "Invalid data", type: "chat", author: "ai"})
+            //addNewMessage({id: 2, text: "Invalid data", type: "chat", author: "ai"})
+            console.log("Invalid Data")
             return
         }
 
@@ -103,12 +92,17 @@ function WhatToCookForm({addNewMessage, setWaiting}) {
             body: serializedBody
         };
 
+        let newMessages = messages
+
         await fetch('/what_to_cook', fetchOptions)
             .then((res) => res.json())
-            .then((data) => addNewMessage({id: 3, text: data.message.content, type: "chat", author: "ai"}))
+            .then((data) => newMessages.push({text: data.message.content, type: "chat", author: "ai"}))
 
         setWaiting(false);
 
+        newMessages.push({type: 'recipe_response'})
+
+        setMessages(newMessages)
     }
 
     return (
