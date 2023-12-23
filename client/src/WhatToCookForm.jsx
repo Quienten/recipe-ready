@@ -12,9 +12,8 @@ function WhatToCookForm({addNewMessage}) {
 
     const [skillLevel, setSkillLevel] = useState(1)
 
-    const [checkedAppliances, setCheckedAppliances] = useState([]);
     const defaultApplianceData = [
-        { id: "1", value: "Stove", selected: false},
+        { id: "1", value: "Stove", selected: true},
         { id: "2", value: "Microwave", selected: false},
         { id: "3", value: "Air Fryer", selected: false},
         { id: "4", value: "Food Processor", selected: false},
@@ -22,6 +21,7 @@ function WhatToCookForm({addNewMessage}) {
         { id: "6", value: "Blender", selected: false},
     ];
     const [applianceData, setApplianceData] = useState(defaultApplianceData);
+    const [checkedAppliances, setCheckedAppliances] = useState(["Stove"])
 
     const mealOptions = ["Breakfast", "Lunch", "Dinner"]
     const [mealSelected, setMealSelected] = useState(2); //Dinner is default
@@ -38,7 +38,7 @@ function WhatToCookForm({addNewMessage}) {
     }
 
     const handleAppliance = (event, index) => {
-        const updateApplianceData = applianceData.map((elem, i) => {
+        const updatedApplianceData = applianceData.map((elem, i) => {
             if (i === index) {
                 // Flip selected
                 elem.selected = !elem.selected
@@ -46,17 +46,15 @@ function WhatToCookForm({addNewMessage}) {
             return elem;
         });
 
-        const value = event.target.value;
-        const isChecked = event.target.checked;
+        setApplianceData(updatedApplianceData)
 
-        if (isChecked) {
-            //Add checked item into checkList
-            setCheckedAppliances([...checkedAppliances, value]);
-        } else {
-            //Remove unchecked item from checkList
-            const filteredList = checkedAppliances.filter((item) => item !== value);
-            setCheckedAppliances(filteredList);
-        }
+        const filtered = applianceData.filter(elem => elem.selected)
+
+        let newChecked = []
+        filtered.map((appliance) => (
+            newChecked.push(appliance.value)
+        ))
+        setCheckedAppliances(newChecked);
     };
 
     const handleMealType = (event) => {
@@ -70,7 +68,7 @@ function WhatToCookForm({addNewMessage}) {
 
     function validateData() {
         if(name === "") return false
-        if(checkedAppliances.length === 0) return false
+        if(checkedAppliances.length < 1) return false
         if(ingredients === "") return false
         return true
     }
