@@ -1,32 +1,15 @@
-import React, {useState} from "react";
-import {Container} from "@mui/material";
+import { Container } from "@mui/material";
 import Stack from "@mui/material/Stack";
 import Button from "@mui/material/Button";
 
-function RecipeResponse({messages, setMessages, setWaiting}) {
-
-    function filterRecipeResponse(msgs) {
-        return msgs.filter((msg) => {return msg.type !== "recipe_response"})
-    }
+function RecipeResponse({addMessage, setWaiting}) {
 
     async function generateAnother(event) {
-
         setWaiting(true)
-
-        let newMessages = messages
-
-        newMessages = filterRecipeResponse(newMessages)
-
         await fetch("/another")
-            //.then((res) => console.log(res.json()))
             .then((res) => res.json())
-            .then((data) => newMessages.push({text: data.message.content, type: "chat", author: "ai"}))
-
+            .then((data) => addMessage("recipe", data.message.content))
         setWaiting(false);
-
-        newMessages.push({type: 'recipe_response'})
-
-        setMessages(newMessages)
     }
 
     return (

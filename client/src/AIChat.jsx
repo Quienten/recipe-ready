@@ -1,41 +1,82 @@
 import ChatMessage from "./ChatMessage";
-import {useState} from "react";
+import { useEffect, useState, useRef } from "react";
 import WhatToCookForm from "./WhatToCookForm";
 import RecipeResponse from "./RecipeResponse";
 import {CircularProgress, Container} from "@mui/material";
 
+import { collection, query, orderBy, limit, serverTimestamp, doc, setDoc} from "firebase/firestore"
+import { useCollectionData } from "react-firebase-hooks/firestore";
+
 const FIRST_MSG = "Hello, I am Chef Marcus, I will be helping you cook today! Please provide me your personal goals for this meal."
 
-function AIChat() {
+function AIChat({ db }) {
+
+    const messagesRef = collection(db, "messages")
+    const q = query(messagesRef, orderBy("createdAt"), limit(25));
+
+    const [messages, loadingMessages, error] = useCollectionData(q)
+    const [localMessages, setLocalMessages] = useState([])
+
+    useEffect(() => {
+        if(loadingMessages) return
+        if(messages[messages.length - 1].type === "recipe") {
+            setLocalMessages([{type: "recipe_response"}])
+        } else {
+            setLocalMessages([])
+        }
+        bottomOfChat.current.scrollIntoView({ behavior: "smooth" })
+    }, [messages]);
+
+    useEffect(() => {
+        bottomOfChat.current.scrollIntoView({ behavior: "smooth" })
+    })
+
     const [formValue, setFormValue] = useState('');
+
+    const bottomOfChat = useRef()
 
     const [waiting, setWaiting] = useState(false)
 
-    const [messages, setMessages] = useState([
-        {text: FIRST_MSG, type: "chat", author: "ai"},
-        {type: "what_to_cook", author: "ai"},
-    ])
+    const addMessage = async(type, text="") => {
 
-    function addNewMessage(newMessage) {
-        setMessages([...messages, newMessage])
+        let data = {
+            author: "ai",
+            type: type,
+            createdAt: serverTimestamp()
+        }
+
+        //Add text for chat messages
+        if(text !== "") {
+            data["text"] = text
+        }
+
+        await setDoc(doc(messagesRef), data)
     }
 
     return (<>
         <Container component="main">
 
-            {messages.map((msg, i) => {
+            {loadingMessages && <CircularProgress />}
+            {messages && messages.map((msg, i) => {
                 switch(msg.type) {
                     case 'chat':
+                    case 'recipe':
                         return <ChatMessage key={i} message={msg}/>
                     case 'what_to_cook':
-                        return <WhatToCookForm key={i} messages={messages} setMessages={setMessages} setWaiting={setWaiting}/>
-                    case 'recipe_response':
-                        return <RecipeResponse key={i} messages={messages} setMessages={setMessages} setWaiting={setWaiting}/>
+                        return <WhatToCookForm key={i} addMessage={addMessage} setWaiting={setWaiting}/>
                 }
+            })}
 
+            {localMessages && localMessages.map((msg, i) => {
+                switch(msg.type) {
+                    case 'recipe_response':
+                        return <RecipeResponse key={i} addMessage={addMessage} setWaiting={setWaiting}/>
+                }
             })}
 
             {waiting && <CircularProgress />}
+
+            <div ref={bottomOfChat}></div>
 
         </Container>
 

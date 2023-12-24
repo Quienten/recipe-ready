@@ -6,7 +6,7 @@ import DoneIcon from '@mui/icons-material/Done';
 import TextField from '@mui/material/TextField';
 import {Box, Container, Grid, Paper, Typography} from "@mui/material";
 
-function WhatToCookForm({messages, setMessages, setWaiting}) {
+function WhatToCookForm({addMessage, setWaiting}) {
 
     const [name, setName] = useState("")
 
@@ -27,7 +27,6 @@ function WhatToCookForm({messages, setMessages, setWaiting}) {
 
     const mealOptions = ["Breakfast", "Lunch", "Dinner"]
     const [mealSelected, setMealSelected] = useState(2); //Dinner is default
-    const [mealType, setMealType] = useState("Dinner");
 
     const [ingredients, setIngredients] = useState("")
 
@@ -79,7 +78,7 @@ function WhatToCookForm({messages, setMessages, setWaiting}) {
             name: name,
             skillLevel: skillLevel,
             appliances: checkedAppliances,
-            mealType: mealType,
+            mealType: mealOptions[mealSelected],
             ingredients: ingredients
         }
 
@@ -92,17 +91,14 @@ function WhatToCookForm({messages, setMessages, setWaiting}) {
             body: serializedBody
         };
 
-        let newMessages = messages
-
         await fetch('/what_to_cook', fetchOptions)
             .then((res) => res.json())
-            .then((data) => newMessages.push({text: data.message.content, type: "chat", author: "ai"}))
+            .then((data) => addMessage("recipe", data.message.content))
 
         setWaiting(false);
 
-        newMessages.push({type: 'recipe_response'})
+        //addMessage("recipe_response")
 
-        setMessages(newMessages)
     }
 
     return (

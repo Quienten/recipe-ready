@@ -8,9 +8,10 @@ import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
 
 import { initializeApp } from "firebase/app";
-import { getAuth, signInWithPopup, signOut, GoogleAuthProvider } from "firebase/auth"
+import { getAuth, signInWithPopup, GoogleAuthProvider } from "firebase/auth"
+import { getFirestore } from "firebase/firestore"
 import { getAnalytics } from "firebase/analytics";
-import {useAuthState} from "react-firebase-hooks/auth";
+import { useAuthState } from "react-firebase-hooks/auth";
 
 import {createTheme, ThemeProvider} from "@mui/material"
 import Button from "@mui/material/Button";
@@ -30,6 +31,7 @@ const firebaseConfig = {
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const analytics = getAnalytics(app);
+const db = getFirestore(app)
 
 const darkTheme = createTheme({
     palette: {
@@ -37,11 +39,11 @@ const darkTheme = createTheme({
     },
 });
 
-const auth = getAuth()
+const auth = getAuth(app)
 
 function App() {
 
-    const [user] = useAuthState(getAuth())
+    const [user] = useAuthState(auth)
 
     return (
         <ThemeProvider theme={darkTheme}>
@@ -52,7 +54,7 @@ function App() {
                 </header>
 
                 <section>
-                    {user ? <AIChat/> : <SignIn/>}
+                    {user ? <AIChat db={db}/> : <SignIn/>}
                 </section>
             </div>
         </ThemeProvider>
