@@ -1,15 +1,35 @@
 import React from "react";
 import './App.css';
 import AIChat from "./AIChat"
-import {createTheme, CssBaseline, ThemeProvider} from "@mui/material"
 
 import '@fontsource/roboto/300.css';
 import '@fontsource/roboto/400.css';
 import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
 
+import { initializeApp } from "firebase/app";
+import { getAuth, signInWithPopup, signOut, GoogleAuthProvider } from "firebase/auth"
+import { getAnalytics } from "firebase/analytics";
+import {useAuthState} from "react-firebase-hooks/auth";
 
-const CHAT_GPT_ON = false
+import {createTheme, ThemeProvider} from "@mui/material"
+import Button from "@mui/material/Button";
+import Google from "@mui/icons-material/Google"
+
+const firebaseConfig = {
+    apiKey: "AIzaSyCJ6lFYmx-88TmCVQq3Ew4hAlmIyvlKffE",
+    authDomain: "recipeready-d6aa3.firebaseapp.com",
+    projectId: "recipeready-d6aa3",
+    storageBucket: "recipeready-d6aa3.appspot.com",
+    messagingSenderId: "639862022067",
+    appId: "1:639862022067:web:73c7cd8ad0d4c7fadaf5c6",
+    measurementId: "G-Z2Q5HLSE8Q"
+};
+
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const analytics = getAnalytics(app);
 
 const darkTheme = createTheme({
     palette: {
@@ -17,22 +37,56 @@ const darkTheme = createTheme({
     },
 });
 
+const auth = getAuth()
+
 function App() {
 
-  return (
+    const [user] = useAuthState(getAuth())
+
+    return (
         <ThemeProvider theme={darkTheme}>
-            {/*<CssBaseline />*/}
             <div className="App">
                 <header>
                     <h1>🍳 Recipe Ready 🍴</h1>
+                    {auth.currentUser && <SignOut/>}
                 </header>
 
                 <section>
-                    <AIChat></AIChat>
+                    {user ? <AIChat/> : <SignIn/>}
                 </section>
             </div>
         </ThemeProvider>
-  );
+    );
+}
+
+function SignIn() {
+
+    const signInWithGoogle = () => {
+        const provider = new GoogleAuthProvider()
+        signInWithPopup(auth, provider)
+
+    }
+
+    return (
+        <Button
+            variant="contained"
+            onClick={signInWithGoogle}
+            sx={{width: 1/2}}
+        >
+            <Google/> Sign in with Google
+        </Button>
+    )
+}
+
+function SignOut() {
+
+    const signOut = () => {
+        auth.signOut()
+    }
+
+    return (
+        <Button onClick={signOut}>Sign Out</Button>
+    )
 }
 
 export default App;
