@@ -7,11 +7,11 @@ import {CircularProgress, Container} from "@mui/material";
 import { collection, query, orderBy, limit, serverTimestamp, doc, setDoc} from "firebase/firestore"
 import { useCollectionData } from "react-firebase-hooks/firestore";
 
-const FIRST_MSG = "Hello, I am Chef Marcus, I will be helping you cook today! Please provide me your personal goals for this meal."
+
 
 function AIChat({ currentUser, db }) {
 
-    const { uid } = currentUser.uid
+    const { uid } = currentUser
 
     const messagesPath = "users/" + uid + "/messages"
     const messagesRef = collection(db, messagesPath)
@@ -46,8 +46,7 @@ function AIChat({ currentUser, db }) {
         let data = {
             author: "ai",
             type: type,
-            createdAt: serverTimestamp(),
-            uid
+            createdAt: serverTimestamp()
         }
 
         //Add text for chat messages

@@ -8,8 +8,8 @@ import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
 
 import { initializeApp } from "firebase/app";
-import { getAuth, signInWithPopup, GoogleAuthProvider } from "firebase/auth"
-import {collection, doc, getFirestore, runTransaction, setDoc} from "firebase/firestore"
+import { getAuth, signInWithPopup, GoogleAuthProvider, getAdditionalUserInfo } from "firebase/auth"
+import {collection, doc, getFirestore, runTransaction, serverTimestamp, setDoc} from "firebase/firestore"
 import { getAnalytics } from "firebase/analytics";
 import { useAuthState } from "react-firebase-hooks/auth";
 
@@ -42,6 +42,8 @@ const darkTheme = createTheme({
 
 const auth = getAuth(app)
 
+const FIRST_MSG = "Hello, I am Chef Marcus, I will be helping you cook today! Please provide me your personal goals for this meal."
+
 function App() {
 
     const [user] = useAuthState(auth)
@@ -72,20 +74,25 @@ function SignIn() {
     const signInWithGoogle = () => {
         const provider = new GoogleAuthProvider()
         signInWithPopup(auth, provider)
-            .then(async(r) => {
-                if(r.additionalUserInfo.isNewUser) {
-                    console.log("New user")
-                    const messagesPath = "users/" + r.user.uid + "/messages"
-                    const messagesRef = collection(db, messagesPath)
-                    await runTransaction(db, async(transaction) => {
-                        const msgCollection = await transaction.get(messagesRef);
-                        if(!msgCollection.exists()) {
-                            await setDoc(doc(messagesRef), data)
-                        }
-                    })
-                }
-            })
+            .then(firstTimeSignIn)
 
+    }
+
+    const firstTimeSignIn = async(r) => {
+        if(getAdditionalUserInfo(r).isNewUser) {
+            const messagesPath = "users/" + r.user.uid + "/messages"
+            const messagesRef = collection(db, messagesPath)
+            await setDoc(doc(messagesRef), {
+                author: "ai",
+                type: "chat",
+                text: FIRST_MSG,
+                createdAt: serverTimestamp()
+            })
+            await setDoc(doc(messagesRef), {
+                type: "what_to_cook",
+                createdAt: serverTimestamp(),
+            })
+        }
     }
 
     return (
