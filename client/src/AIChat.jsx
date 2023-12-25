@@ -9,16 +9,20 @@ import { useCollectionData } from "react-firebase-hooks/firestore";
 
 const FIRST_MSG = "Hello, I am Chef Marcus, I will be helping you cook today! Please provide me your personal goals for this meal."
 
-function AIChat({ db }) {
+function AIChat({ currentUser, db }) {
 
-    const messagesRef = collection(db, "messages")
+    const { uid } = currentUser.uid
+
+    const messagesPath = "users/" + uid + "/messages"
+    const messagesRef = collection(db, messagesPath)
+    //const messagesRef = collection(db, "messages")
     const q = query(messagesRef, orderBy("createdAt"), limit(25));
 
     const [messages, loadingMessages, error] = useCollectionData(q)
     const [localMessages, setLocalMessages] = useState([])
 
     useEffect(() => {
-        if(loadingMessages) return
+        if(loadingMessages || messages.length === 0) return
         if(messages[messages.length - 1].type === "recipe") {
             setLocalMessages([{type: "recipe_response"}])
         } else {
@@ -42,7 +46,8 @@ function AIChat({ db }) {
         let data = {
             author: "ai",
             type: type,
-            createdAt: serverTimestamp()
+            createdAt: serverTimestamp(),
+            uid
         }
 
         //Add text for chat messages
