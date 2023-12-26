@@ -60,12 +60,13 @@ function AIChat({ currentUser, db }) {
 
             {loadingMessages && <CircularProgress /> /* Wait for database query */}
             {messages && messages.map((msg, i) => {
+                if(msg.hidden) return
                 switch(msg.type) {
                     case 'chat':
                     case 'recipe':
                         return <ChatMessage key={i} message={msg}/>
                     case 'what_to_cook':
-                        return <WhatToCookForm key={i} addMessage={addMessage} setWaiting={setWaiting}/>
+                        return <WhatToCookForm key={i} uid={uid} addMessage={addMessage} setWaiting={setWaiting} disabled={i !== messages.length - 1}/>
                 }
             })}
 

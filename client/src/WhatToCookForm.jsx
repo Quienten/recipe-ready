@@ -6,7 +6,7 @@ import DoneIcon from '@mui/icons-material/Done';
 import TextField from '@mui/material/TextField';
 import {Box, Container, Grid, Paper, Typography} from "@mui/material";
 
-function WhatToCookForm({addMessage, setWaiting}) {
+function WhatToCookForm({ uid, addMessage, setWaiting, disabled }) {
 
     const [name, setName] = useState("")
 
@@ -77,7 +77,8 @@ function WhatToCookForm({addMessage, setWaiting}) {
             skillLevel: skillLevel,
             appliances: checkedAppliances,
             mealType: mealOptions[mealSelected],
-            ingredients: ingredients
+            ingredients: ingredients,
+            uid: uid
         }
 
         setWaiting(true)
@@ -90,9 +91,6 @@ function WhatToCookForm({addMessage, setWaiting}) {
         };
 
         await fetch('/what_to_cook', fetchOptions)
-            .then((res) => res.json())
-            .then((data) => addMessage("recipe", data.message.content))
-
         setWaiting(false);
     }
 
@@ -122,6 +120,7 @@ function WhatToCookForm({addMessage, setWaiting}) {
                                     setName(e.target.value)
                                 }}
                                 fullWidth
+                                disabled={disabled}
                             />
                         </Grid>
                         <Grid item xs={5}>
@@ -135,6 +134,7 @@ function WhatToCookForm({addMessage, setWaiting}) {
                                               label={item}
                                               onClick={(e) => setSkillLevel(item)}
                                               variant={item === skillLevel ? "" : "outlined"}
+                                              disabled={disabled}
                                         />
                                     );
                                 })}
@@ -152,6 +152,7 @@ function WhatToCookForm({addMessage, setWaiting}) {
                                               onClick={(e) => setMealSelected(index)}
                                               icon={index === mealSelected ? <DoneIcon/> : null}
                                               variant={index === mealSelected ? "" : "outlined"}
+                                              disabled={disabled}
                                         />
                                     );
                                 })}
@@ -176,6 +177,7 @@ function WhatToCookForm({addMessage, setWaiting}) {
                                               onClick={(e) => handleAppliance(e, index)}
                                               icon={item.selected ? <DoneIcon/> : null}
                                               variant={item.selected ? "" : "outlined"}
+                                              disabled={disabled}
                                         />
                                     );
                                 })}
@@ -192,6 +194,7 @@ function WhatToCookForm({addMessage, setWaiting}) {
                                 onChange={handleIngredients}
                                 fullWidth
                                 required
+                                disabled={disabled}
                             />
                         </Grid>
                         <Grid item xs={12}>
@@ -200,7 +203,7 @@ function WhatToCookForm({addMessage, setWaiting}) {
                                 fullWidth
                                 variant="contained"
                                 sx={{mt: 3, mb: 2}}
-                                disabled={complete}
+                                disabled={disabled}
                             >
                                 Submit
                             </Button>

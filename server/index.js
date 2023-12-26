@@ -12,20 +12,19 @@ const openai = new OpenAI({
     apiKey: process.env.OPENAI_API_KEY,
 });
 
-const ASSISTANT_DESCRIPTION =
-```You are a chef that wants to share their recipes with ordinary people.
-Your name is Marcus.
-When you are sharing a recipe, be sure to list meta data about the recipe at the start of the message, then at the end of the meta data write "{beginRecipe}".
-The meta data should include recipe_name.```
+const ASSISTANT_DESCRIPTION = `You are a chef that wants to share their recipes with ordinary people. \n
+Your name is Marcus. \n
+When describing a recipe, include a bold header with the name of the recipe`
 
 
 const WHAT_TO_COOK_PROMPT =
-`Hello, my name is {name},
-I would rate my cooking skills a {skillLevel} out of 5.
-I own the following kitchen appliances: {appliances}.
-I am looking for something to cook for {mealType}.
-I possess {ingredients}.
-Can you suggest a dish to make?`
+`Hello, my name is {name}, \n
+I would rate my cooking skills a {skillLevel} out of 5. \n
+I own the following kitchen appliances: {appliances}. \n
+I am looking for something to cook for {mealType}. \n
+I possess {ingredients}. \n
+Can you suggest a dish to make?
+`
 
 const ANOTHER_PROMPT =  "Please give me another recipe with the information I provided."
 
@@ -41,11 +40,35 @@ function getAIMessage(prompt) {
     return formatMessage("assistant", prompt)
 }
 
+function getRecipeName(str) {
+    let findRecipeName = /\*\*([^*]*(?:\*(?!\*)[^*]*)*)\*\*/g;
+    let results = str.match(findRecipeName)
+    if(results.length > 0) {
+        return results[0].replace("**", "")
+    }
+    return ""
+}
+
+async function addRecipeMessage(uid, content) {
+    let recipeName = getRecipeName(content)
+
+    let data = {
+        author: "ai",
+        type: "recipe",
+        createdAt: Timestamp.now(),
+        text: content,
+        recipe_name: recipeName
+    }
+
+    await addMessage(uid, data)
+}
 
 app.post('/what_to_cook', async (req, res) => {
     console.log(req.body)
 
-    let messages = []
+    const uid = req.body["uid"]
+
+    let messages = [{"role": "system", "content": ASSISTANT_DESCRIPTION}]
 
     let userPrompt = WHAT_TO_COOK_PROMPT
     for (const elem of Object.entries(req.body)) {
@@ -72,13 +95,12 @@ app.post('/what_to_cook', async (req, res) => {
         messages: messages
     })
 
-    messages.push(completion.choices[0].message)
+    //messages.push(completion.choices[0].message)
+
+    await addRecipeMessage(uid, completion.choices[0].message.content)
 
     res.status(200) //SUCCESS
-    res.json({
-        message: completion.choices[0].message
-    })
-
+    res.json({ok:true})
 })
 
 app.post("/another", async (req, res) => {
@@ -98,14 +120,7 @@ app.post("/another", async (req, res) => {
             messages: chatHistory
     })
 
-    let data = {
-        author: "ai",
-        type: "recipe",
-        createdAt: Timestamp.now(),
-        text: completion.choices[0].message["content"]
-    }
-
-    await addMessage(uid, data)
+    await addRecipeMessage(uid, completion.choices[0].message.content)
 
     res.status(200) //SUCCESS
     res.json({ok:true})

@@ -1,6 +1,7 @@
 import React, {useEffect} from "react";
 import './App.css';
 import AIChat from "./AIChat"
+import Account from "./Account";
 
 import '@fontsource/roboto/300.css';
 import '@fontsource/roboto/400.css';
@@ -53,7 +54,7 @@ function App() {
                     {auth.currentUser &&
                         <Stack direction="row" spacing={1} alignItems="center">
                             <SignOut/>
-                            <Avatar alt={auth.currentUser.displayName} src={auth.currentUser.photoURL} />
+                            <Account currentUser={auth.currentUser} db={db}/>
                         </Stack>
                     }
                 </header>

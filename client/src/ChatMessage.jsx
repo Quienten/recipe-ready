@@ -1,6 +1,8 @@
 import ChefIcon from './chef.png';
-import {Avatar, Container, Grid, Typography} from "@mui/material";
+import {Avatar, Box, Container, Grid, List, ListItem, ListItemText, Typography} from "@mui/material";
+import { MuiMarkdown } from 'mui-markdown';
 
+//Note that "text" is markdown.
 function ChatMessage(props) {
     const { text, type } = props.message;
 
@@ -11,9 +13,9 @@ function ChatMessage(props) {
                     <Avatar src={ChefIcon} className={`chef`}/>
                 </Grid>
                 <Grid item xs={11}>
-                    <Typography align="left"
-                        sx={{borderRadius: 4, borderBottomLeftRadius: 0, backgroundColor: "#222"}}
-                    >{text}</Typography>
+                    <Box sx={{borderRadius: 4, borderBottomLeftRadius: 0, backgroundColor: "#222"}}>
+                        <MuiMarkdown>{text}</MuiMarkdown>
+                    </Box>
                 </Grid>
             </Grid>
 
