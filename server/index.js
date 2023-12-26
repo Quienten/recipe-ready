@@ -27,8 +27,6 @@ Can you suggest a dish to make?`
 
 const ANOTHER_PROMPT =  "Please give me another recipe with the information I provided."
 
-let messages = [{"role": "system", "content": ASSISTANT_DESCRIPTION}]
-
 function formatMessage(type, prompt) {
     return {role: type, content: prompt}
 }
@@ -44,7 +42,8 @@ function getAIMessage(prompt) {
 
 app.post('/what_to_cook', async (req, res) => {
     console.log(req.body)
-    messages = []
+
+    let messages = []
 
     let userPrompt = WHAT_TO_COOK_PROMPT
     for (const elem of Object.entries(req.body)) {
@@ -140,10 +139,10 @@ async function addMessage(uid, data) {
 }
 
 
-let firebaseApp = initializeApp({
+const firebaseApp = initializeApp({
     credential: cert(serviceAccount)
 })
-let db = getFirestore();
+const db = getFirestore();
 
 app.listen(PORT, () => {
     console.log(`Server listening on ${PORT}`);

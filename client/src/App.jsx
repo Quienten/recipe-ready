@@ -9,7 +9,7 @@ import '@fontsource/roboto/700.css';
 
 import { initializeApp } from "firebase/app";
 import { getAuth, signInWithPopup, GoogleAuthProvider, getAdditionalUserInfo } from "firebase/auth"
-import {collection, doc, getFirestore, runTransaction, serverTimestamp, setDoc} from "firebase/firestore"
+import {collection, doc, getFirestore, serverTimestamp, setDoc} from "firebase/firestore"
 import { getAnalytics } from "firebase/analytics";
 import { useAuthState } from "react-firebase-hooks/auth";
 
@@ -33,16 +33,13 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const analytics = getAnalytics(app);
 const db = getFirestore(app)
+const auth = getAuth(app)
 
 const darkTheme = createTheme({
     palette: {
         mode: 'dark',
     },
 });
-
-const auth = getAuth(app)
-
-const FIRST_MSG = "Hello, I am Chef Marcus, I will be helping you cook today! Please provide me your personal goals for this meal."
 
 function App() {
 
@@ -71,13 +68,18 @@ function App() {
 
 function SignIn() {
 
+    const FIRST_MSG = "Hello, I am Chef Marcus, I will be helping you cook today! Please provide me your personal goals for this meal."
+
     const signInWithGoogle = () => {
         const provider = new GoogleAuthProvider()
         signInWithPopup(auth, provider)
             .then(firstTimeSignIn)
-
+            .catch((error) => {
+                //Do nothing
+            })
     }
 
+    //Initialize data for a first time user.
     const firstTimeSignIn = async(r) => {
         if(getAdditionalUserInfo(r).isNewUser) {
             const messagesPath = "users/" + r.user.uid + "/messages"
