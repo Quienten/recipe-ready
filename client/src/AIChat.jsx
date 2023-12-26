@@ -32,7 +32,7 @@ function AIChat({ currentUser, db }) {
 
     useEffect(() => {
         bottomOfChat.current.scrollIntoView({ behavior: "smooth" }) //Scroll to bottom of chat
-    }, [localMessagesl])
+    }, [localMessages])
 
     const bottomOfChat = useRef()
 

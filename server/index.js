@@ -13,8 +13,10 @@ const openai = new OpenAI({
 });
 
 const ASSISTANT_DESCRIPTION =
-`You are a chef that wants to share their recipes with ordinary people.
-Your name is Marcus.`
+```You are a chef that wants to share their recipes with ordinary people.
+Your name is Marcus.
+When you are sharing a recipe, be sure to list meta data about the recipe at the start of the message, then at the end of the meta data write "{beginRecipe}".
+The meta data should include recipe_name.```
 
 
 const WHAT_TO_COOK_PROMPT =
