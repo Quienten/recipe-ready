@@ -63,13 +63,11 @@ function WhatToCookForm({addMessage, setWaiting}) {
     }
 
     async function submit(event) {
-        console.log("submitted")
         event.preventDefault()
 
         setComplete(true)
 
         if (!validateData()) {
-            //addNewMessage({id: 2, text: "Invalid data", type: "chat", author: "ai"})
             console.log("Invalid Data")
             return
         }
@@ -96,9 +94,6 @@ function WhatToCookForm({addMessage, setWaiting}) {
             .then((data) => addMessage("recipe", data.message.content))
 
         setWaiting(false);
-
-        //addMessage("recipe_response")
-
     }
 
     return (

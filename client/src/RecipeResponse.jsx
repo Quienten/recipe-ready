@@ -19,8 +19,6 @@ function RecipeResponse({addMessage, setWaiting, uid}) {
         };
 
         await fetch("/another", fetchOptions)
-            // .then((res) => res.json())
-            // .then((data) => addMessage("recipe", data.message.content))
         setWaiting(false);
     }
 
@@ -34,7 +32,9 @@ function RecipeResponse({addMessage, setWaiting, uid}) {
                         onClick={generateAnother}
                 >Generate Another Recipe</Button>
                 <Button variant="contained">Can I have a YouTube video about that?</Button>
-                <Button variant="contained">Start Over</Button>
+                <Button variant="contained"
+                        onClick={(e) => {addMessage("what_to_cook")}}
+                >Start Over</Button>
             </Stack>
         </Container>
     )

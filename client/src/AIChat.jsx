@@ -1,5 +1,5 @@
-import ChatMessage from "./ChatMessage";
 import { useEffect, useState, useRef } from "react";
+import ChatMessage from "./ChatMessage";
 import WhatToCookForm from "./WhatToCookForm";
 import RecipeResponse from "./RecipeResponse";
 import {CircularProgress, Container} from "@mui/material";
@@ -15,32 +15,30 @@ function AIChat({ currentUser, db }) {
 
     const messagesPath = "users/" + uid + "/messages"
     const messagesRef = collection(db, messagesPath)
-    //const messagesRef = collection(db, "messages")
     const q = query(messagesRef, orderBy("createdAt"), limit(25));
 
-    const [messages, loadingMessages, error] = useCollectionData(q)
-    const [localMessages, setLocalMessages] = useState([])
+    const [messages, loadingMessages, error] = useCollectionData(q) //Database messages
+    const [localMessages, setLocalMessages] = useState([]) //Local messages only
 
     useEffect(() => {
         if(loadingMessages || messages.length === 0) return
-        if(messages[messages.length - 1].type === "recipe") {
-            setLocalMessages([{type: "recipe_response"}])
+        if(messages[messages.length - 1].type === "recipe") { //If the most recent change is a recipe
+            setLocalMessages([{type: "recipe_response"}]) //Add recipe response bar
         } else {
-            setLocalMessages([])
+            setLocalMessages([]) //Remove recipe response bar
         }
-        bottomOfChat.current.scrollIntoView({ behavior: "smooth" })
+        bottomOfChat.current.scrollIntoView({ behavior: "smooth" }) //Scroll to bottom of chat
     }, [messages]);
 
     useEffect(() => {
-        bottomOfChat.current.scrollIntoView({ behavior: "smooth" })
-    })
-
-    const [formValue, setFormValue] = useState('');
+        bottomOfChat.current.scrollIntoView({ behavior: "smooth" }) //Scroll to bottom of chat
+    }, [localMessagesl])
 
     const bottomOfChat = useRef()
 
-    const [waiting, setWaiting] = useState(false)
+    const [waiting, setWaiting] = useState(false) //Used for loading circle.
 
+    //Add a message to the database. Passed to children components.
     const addMessage = async(type, text="") => {
 
         let data = {
@@ -54,13 +52,13 @@ function AIChat({ currentUser, db }) {
             data["text"] = text
         }
 
-        await setDoc(doc(messagesRef), data)
+        await setDoc(doc(messagesRef), data) //Create new doc with msg data
     }
 
     return (<>
         <Container component="main">
 
-            {loadingMessages && <CircularProgress />}
+            {loadingMessages && <CircularProgress /> /* Wait for database query */}
             {messages && messages.map((msg, i) => {
                 switch(msg.type) {
                     case 'chat':
@@ -74,22 +72,22 @@ function AIChat({ currentUser, db }) {
             {localMessages && localMessages.map((msg, i) => {
                 switch(msg.type) {
                     case 'recipe_response':
-                        return <RecipeResponse key={i} addMessage={addMessage} setWaiting={setWaiting} uid={uid}/>
+                        return <RecipeResponse key={i + messages.length /* Offset indexes by messages */ } addMessage={addMessage} setWaiting={setWaiting} uid={uid}/>
                 }
             })}
 
-            {waiting && <CircularProgress />}
+            {waiting && <CircularProgress /> /* Wait for OpenAI query */}
 
-            <div ref={bottomOfChat}></div>
+            <div ref={bottomOfChat }></div>
 
         </Container>
 
 
         <form className="chat-form">
 
-            <input className="chat-form" value={formValue} onChange={(e) => setFormValue(e.target.value)} placeholder="say something nice" />
+            <input className="chat-form" placeholder="say something nice" />
 
-            <button type="submit" disabled={!formValue}>🕊️</button>
+            <button type="submit" >🕊️</button>
 
         </form>
     </>)
