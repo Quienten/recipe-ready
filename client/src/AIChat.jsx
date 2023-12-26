@@ -74,7 +74,7 @@ function AIChat({ currentUser, db }) {
             {localMessages && localMessages.map((msg, i) => {
                 switch(msg.type) {
                     case 'recipe_response':
-                        return <RecipeResponse key={i} addMessage={addMessage} setWaiting={setWaiting}/>
+                        return <RecipeResponse key={i} addMessage={addMessage} setWaiting={setWaiting} uid={uid}/>
                 }
             })}
 

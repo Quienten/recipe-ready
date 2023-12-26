@@ -2,13 +2,25 @@ import { Container } from "@mui/material";
 import Stack from "@mui/material/Stack";
 import Button from "@mui/material/Button";
 
-function RecipeResponse({addMessage, setWaiting}) {
+function RecipeResponse({addMessage, setWaiting, uid}) {
 
     async function generateAnother(event) {
         setWaiting(true)
-        await fetch("/another")
-            .then((res) => res.json())
-            .then((data) => addMessage("recipe", data.message.content))
+
+        const formData = {
+            uid: uid
+        }
+
+        const serializedBody = JSON.stringify(formData);
+        const fetchOptions = {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: serializedBody
+        };
+
+        await fetch("/another", fetchOptions)
+            // .then((res) => res.json())
+            // .then((data) => addMessage("recipe", data.message.content))
         setWaiting(false);
     }
 
