@@ -48,7 +48,7 @@ function getRecipeName(str) {
     let findRecipeName = /\*\*([^*]*(?:\*(?!\*)[^*]*)*)\*\*/g;
     let results = str.match(findRecipeName)
     if(results.length > 0) {
-        return results[0].replace("**", "")
+        return results[0].replaceAll("**", "") //Remove bold markdown
     }
     return ""
 }

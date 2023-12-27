@@ -16,7 +16,7 @@ function AIChat({ currentUser, db }) {
     const { uid } = currentUser
 
     const messagesRef = getMessageRef(db, uid)
-    const q = query(getMessageRef(db, uid), orderBy("createdAt"), limit(25));
+    const q = query(getMessageRef(db, uid), orderBy("createdAt", "desc"), limit(25));
 
     const [messages, loadingMessages, error] = useCollectionData(q) //Database messages
     const [localMessages, setLocalMessages] = useState([]) //Local messages only
@@ -61,7 +61,7 @@ function AIChat({ currentUser, db }) {
         <Container component="main">
 
             {loadingMessages && <CircularProgress /> /* Wait for database query */}
-            {messages && messages.map((msg, i) => {
+            {messages && messages.reverse().map((msg, i) => {
                 if(msg.hidden) return
                 switch(msg.type) {
                     case 'chat':

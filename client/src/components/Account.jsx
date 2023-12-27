@@ -15,7 +15,7 @@ function Account({ currentUser, db }) {
 
     const clearChatHistory = async() => {
         const messagesRef = getMessageRef(db, currentUser.uid)
-        const q = query(messagesRef, orderBy("createdAt"), limit(25));
+        const q = query(messagesRef, orderBy("createdAt", "desc"), limit(25));
         const snapshot = await getDocs(q)
 
         const batch = writeBatch(db)
