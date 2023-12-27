@@ -1,10 +1,11 @@
 import express from "express"
-import OpenAI from "openai";
 import {cert, initializeApp} from 'firebase-admin/app';
-import { getFirestore, Timestamp } from "firebase-admin/firestore";
-import serviceAccount from "./keys/recipeready-d6aa3-c85f3ebc56d3.json" assert { type: "json" }
+import {getFirestore, Timestamp} from "firebase-admin/firestore";
+import OpenAI from "openai";
+import {ANOTHER_PROMPT, ASSISTANT_DESCRIPTION, WHAT_TO_COOK_PROMPT} from "./constants.js";
+import serviceAccount from "./keys/recipeready-d6aa3-c85f3ebc56d3.json" assert {type: "json"}
 
-import { searchYouTube } from "./youtube.js"
+import {searchYouTube} from "./youtube.js"
 
 const PORT = 3001;
 const app = express();
@@ -13,24 +14,6 @@ app.use(express.json())
 const openai = new OpenAI({
     apiKey: process.env.OPENAI_API_KEY,
 });
-
-
-
-const ASSISTANT_DESCRIPTION = `You are a chef that wants to share their recipes with ordinary people. \n
-Your name is Marcus. \n
-When describing a recipe, include a bold header with the name of the recipe`
-
-
-const WHAT_TO_COOK_PROMPT =
-`Hello, my name is {name}, \n
-I would rate my cooking skills a {skillLevel} out of 5. \n
-I own the following kitchen appliances: {appliances}. \n
-I am looking for something to cook for {mealType}. \n
-I possess {ingredients}. \n
-Can you suggest a dish to make?
-`
-
-const ANOTHER_PROMPT =  "Please give me another recipe with the information I provided."
 
 function formatMessage(type, prompt) {
     return {role: type, content: prompt}

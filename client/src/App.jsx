@@ -89,13 +89,15 @@ function SignIn() {
     }
 
     return (
-        <Button
-            variant="contained"
-            onClick={signInWithGoogle}
-            sx={{width: 1/2}}
-        >
-            <Google/> Sign in with Google
-        </Button>
+        <Box fullWidth sx={{display: 'flex', justifyContent: 'center'}}>
+            <Button
+                variant="contained"
+                onClick={signInWithGoogle}
+                sx={{width: 1/2}}
+            >
+                <Google/> Sign in with Google
+            </Button>
+        </Box>
     )
 }
 
