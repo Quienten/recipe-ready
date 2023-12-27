@@ -6,13 +6,11 @@ import DoneIcon from '@mui/icons-material/Done';
 import TextField from '@mui/material/TextField';
 import {Box, Container, Grid, Paper, Typography} from "@mui/material";
 
-function WhatToCookForm({ uid, addMessage, setWaiting, disabled }) {
+function WhatToCookForm({ uid, setWaiting, disabled }) {
 
     const [name, setName] = useState("")
 
     const [skillLevel, setSkillLevel] = useState(1)
-
-    const [complete, setComplete] = useState(false)
 
     const defaultApplianceData = [
         { id: "1", value: "Stove", selected: true},
@@ -64,8 +62,7 @@ function WhatToCookForm({ uid, addMessage, setWaiting, disabled }) {
 
     async function submit(event) {
         event.preventDefault()
-
-        setComplete(true)
+        setWaiting(true)
 
         if (!validateData()) {
             console.log("Invalid Data")
@@ -81,7 +78,7 @@ function WhatToCookForm({ uid, addMessage, setWaiting, disabled }) {
             uid: uid
         }
 
-        setWaiting(true)
+
 
         const serializedBody = JSON.stringify(formData);
         const fetchOptions = {

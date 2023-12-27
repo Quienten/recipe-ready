@@ -68,7 +68,7 @@ function AIChat({ currentUser, db }) {
                     case 'recipe':
                         return <Chat key={i} message={msg}/>
                     case 'what_to_cook':
-                        return <WhatToCookForm key={i} uid={uid} addMessage={addMessage} setWaiting={setWaiting} disabled={i !== messages.length - 1}/>
+                        return <WhatToCookForm key={i} uid={uid} addMessage={addMessage} setWaiting={setWaiting} disabled={waiting || i !== messages.length - 1}/>
                     case 'youtube_embed':
                         return <YouTubeEmbed vids={msg.vids}/>
                 }
