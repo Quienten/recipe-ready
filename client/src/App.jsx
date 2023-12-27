@@ -13,10 +13,11 @@ import {collection, doc, getFirestore, serverTimestamp, setDoc} from "firebase/f
 import { getAnalytics } from "firebase/analytics";
 import { useAuthState } from "react-firebase-hooks/auth";
 
-import { createTheme, ThemeProvider } from "@mui/material"
+import {Box, createTheme, ThemeProvider} from "@mui/material"
 import Button from "@mui/material/Button";
 import Google from "@mui/icons-material/Google"
 import Stack from "@mui/material/Stack";
+import {addInitialMessages} from "./features/authentication/auth";
 
 const firebaseConfig = {
     apiKey: "AIzaSyCJ6lFYmx-88TmCVQq3Ew4hAlmIyvlKffE",
@@ -61,14 +62,14 @@ function App() {
                 <section>
                     {user ? <AIChat currentUser={auth.currentUser} db={db}/> : <SignIn/>}
                 </section>
+
+                <Box component={"footer"}/>
             </div>
         </ThemeProvider>
     );
 }
 
 function SignIn() {
-
-    const FIRST_MSG = "Hello, I am Chef Marcus, I will be helping you cook today! Please provide me your personal goals for this meal."
 
     const signInWithGoogle = () => {
         const provider = new GoogleAuthProvider()
@@ -82,18 +83,7 @@ function SignIn() {
     //Initialize data for a first time user.
     const firstTimeSignIn = async(r) => {
         if(getAdditionalUserInfo(r).isNewUser) {
-            const messagesPath = "users/" + r.user.uid + "/messages"
-            const messagesRef = collection(db, messagesPath)
-            await setDoc(doc(messagesRef), {
-                author: "ai",
-                type: "chat",
-                text: FIRST_MSG,
-                createdAt: serverTimestamp()
-            })
-            await setDoc(doc(messagesRef), {
-                type: "what_to_cook",
-                createdAt: serverTimestamp(),
-            })
+            await addInitialMessages(db, r.user.uid)
         }
     }
 

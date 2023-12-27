@@ -34,8 +34,8 @@ body {
 
 main {
   padding: 10px;
-  height: 80vh;
-  margin: 10vh 0 10vh;
+  height: 85vh;
+  margin: 10vh 0 5vh;
   overflow-y: scroll;
   display: flex;
   flex-direction: column;
@@ -53,8 +53,8 @@ main::-webkit-scrollbar-thumb {
   background: #6649b8;
 }
 
-form.chat-form {
-  height: 10vh;
+footer {
+  height: 5vh;
   position: fixed;
   bottom: 0;
   background-color: rgb(24, 23, 23);

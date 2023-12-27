@@ -1,8 +1,9 @@
 import { useEffect, useState, useRef } from "react";
+import {getMessageRef} from "../features/authentication/auth";
 import Chat from "./messages/Chat";
 import WhatToCookForm from "./messages/WhatToCookForm";
 import RecipeResponse from "./messages/RecipeResponse";
-import {CircularProgress, Container} from "@mui/material";
+import {Box, CircularProgress, Container} from "@mui/material";
 
 import { collection, query, orderBy, limit, serverTimestamp, doc, setDoc} from "firebase/firestore"
 import { useCollectionData } from "react-firebase-hooks/firestore";
@@ -14,9 +15,8 @@ function AIChat({ currentUser, db }) {
 
     const { uid } = currentUser
 
-    const messagesPath = "users/" + uid + "/messages"
-    const messagesRef = collection(db, messagesPath)
-    const q = query(messagesRef, orderBy("createdAt"), limit(25));
+    const messagesRef = getMessageRef(db, uid)
+    const q = query(getMessageRef(db, uid), orderBy("createdAt"), limit(25));
 
     const [messages, loadingMessages, error] = useCollectionData(q) //Database messages
     const [localMessages, setLocalMessages] = useState([]) //Local messages only
@@ -83,18 +83,9 @@ function AIChat({ currentUser, db }) {
 
             {waiting && <CircularProgress /> /* Wait for OpenAI query */}
 
-            <div ref={bottomOfChat }></div>
+            <div ref={bottomOfChat}></div>
 
         </Container>
-
-
-        <form className="chat-form">
-
-            <input className="chat-form" placeholder="say something nice" />
-
-            <button type="submit" >🕊️</button>
-
-        </form>
     </>)
 }
 
