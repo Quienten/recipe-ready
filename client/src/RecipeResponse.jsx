@@ -2,7 +2,7 @@ import { Container } from "@mui/material";
 import Stack from "@mui/material/Stack";
 import Button from "@mui/material/Button";
 
-function RecipeResponse({addMessage, setWaiting, uid}) {
+function RecipeResponse({ addMessage, setWaiting, uid, prevMsgType }) {
 
     async function generateAnother(event) {
         setWaiting(true)
@@ -22,6 +22,24 @@ function RecipeResponse({addMessage, setWaiting, uid}) {
         setWaiting(false);
     }
 
+    async function addYouTubeEmbed(event) {
+        setWaiting(true)
+
+        const formData = {
+            uid: uid
+        }
+
+        const serializedBody = JSON.stringify(formData);
+        const fetchOptions = {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: serializedBody
+        };
+
+        await fetch("/embed_youtube", fetchOptions)
+        setWaiting(false);
+    }
+
     return (
         <Container
             spacing={0}
@@ -31,7 +49,9 @@ function RecipeResponse({addMessage, setWaiting, uid}) {
                 <Button variant="contained"
                         onClick={generateAnother}
                 >Generate Another Recipe</Button>
-                <Button variant="contained">Can I have a YouTube video about that?</Button>
+                {prevMsgType === "recipe" && <Button variant="contained"
+                        onClick={addYouTubeEmbed}
+                >Can I have a YouTube video about that?</Button>}
                 <Button variant="contained"
                         onClick={(e) => {addMessage("what_to_cook")}}
                 >Start Over</Button>

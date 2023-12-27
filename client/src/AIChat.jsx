@@ -6,6 +6,7 @@ import {CircularProgress, Container} from "@mui/material";
 
 import { collection, query, orderBy, limit, serverTimestamp, doc, setDoc} from "firebase/firestore"
 import { useCollectionData } from "react-firebase-hooks/firestore";
+import YouTubeEmbed from "./YouTubeEmbed";
 
 
 
@@ -22,7 +23,8 @@ function AIChat({ currentUser, db }) {
 
     useEffect(() => {
         if(loadingMessages || messages.length === 0) return
-        if(messages[messages.length - 1].type === "recipe") { //If the most recent change is a recipe
+        let type = messages[messages.length - 1].type
+        if(type === "recipe" || type === "youtube_embed") { //If the most recent change is a recipe
             setLocalMessages([{type: "recipe_response"}]) //Add recipe response bar
         } else {
             setLocalMessages([]) //Remove recipe response bar
@@ -67,13 +69,15 @@ function AIChat({ currentUser, db }) {
                         return <ChatMessage key={i} message={msg}/>
                     case 'what_to_cook':
                         return <WhatToCookForm key={i} uid={uid} addMessage={addMessage} setWaiting={setWaiting} disabled={i !== messages.length - 1}/>
+                    case 'youtube_embed':
+                        return <YouTubeEmbed vids={msg.vids}/>
                 }
             })}
 
             {localMessages && localMessages.map((msg, i) => {
                 switch(msg.type) {
                     case 'recipe_response':
-                        return <RecipeResponse key={i + messages.length /* Offset indexes by messages */ } addMessage={addMessage} setWaiting={setWaiting} uid={uid}/>
+                        return <RecipeResponse key={i + messages.length /* Offset indexes by messages */ } addMessage={addMessage} setWaiting={setWaiting} uid={uid} prevMsgType={messages[messages.length - 1].type} />
                 }
             })}
 

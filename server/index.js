@@ -4,6 +4,8 @@ import {cert, initializeApp} from 'firebase-admin/app';
 import { getFirestore, Timestamp } from "firebase-admin/firestore";
 import serviceAccount from "./keys/recipeready-d6aa3-c85f3ebc56d3.json" assert { type: "json" }
 
+import { searchYouTube } from "./youtube.js"
+
 const PORT = 3001;
 const app = express();
 app.use(express.json())
@@ -11,6 +13,8 @@ app.use(express.json())
 const openai = new OpenAI({
     apiKey: process.env.OPENAI_API_KEY,
 });
+
+
 
 const ASSISTANT_DESCRIPTION = `You are a chef that wants to share their recipes with ordinary people. \n
 Your name is Marcus. \n
@@ -121,6 +125,41 @@ app.post("/another", async (req, res) => {
     })
 
     await addRecipeMessage(uid, completion.choices[0].message.content)
+
+    res.status(200) //SUCCESS
+    res.json({ok:true})
+})
+
+app.post("/embed_youtube", async (req, res) => {
+
+    console.log(req.body)
+
+    const uid = req.body["uid"]
+
+    const messagesPath = "users/" + uid + "/messages"
+    const messagesRef = await db.collection(messagesPath)
+    const q = await messagesRef.orderBy("createdAt", "desc").limit(1).get()
+    if(q.empty) {
+        console.log("nothing")
+    }
+
+    let msgData = q.docs[0].data()
+    console.log("T")
+    console.log(msgData)
+    console.log("T")
+    const recipe_name = msgData["recipe_name"]
+
+    let vids = await searchYouTube(recipe_name)
+
+    let data = {
+        author: "ai",
+        type: "youtube_embed",
+        createdAt: Timestamp.now(),
+        vids: vids,
+        recipe_name: recipe_name
+    }
+
+    await addMessage(uid, data)
 
     res.status(200) //SUCCESS
     res.json({ok:true})

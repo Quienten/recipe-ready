@@ -1,4 +1,3 @@
-import React, {useEffect} from "react";
 import './App.css';
 import AIChat from "./AIChat"
 import Account from "./Account";
@@ -14,7 +13,7 @@ import {collection, doc, getFirestore, serverTimestamp, setDoc} from "firebase/f
 import { getAnalytics } from "firebase/analytics";
 import { useAuthState } from "react-firebase-hooks/auth";
 
-import {Avatar, createTheme, ThemeProvider} from "@mui/material"
+import { createTheme, ThemeProvider } from "@mui/material"
 import Button from "@mui/material/Button";
 import Google from "@mui/icons-material/Google"
 import Stack from "@mui/material/Stack";
