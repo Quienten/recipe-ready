@@ -9,7 +9,7 @@ import '@fontsource/roboto/700.css';
 
 import { initializeApp } from "firebase/app";
 import { getAuth, signInWithPopup, GoogleAuthProvider, getAdditionalUserInfo } from "firebase/auth"
-import {collection, doc, getFirestore, serverTimestamp, setDoc} from "firebase/firestore"
+import { getFirestore } from "firebase/firestore"
 import { getAnalytics } from "firebase/analytics";
 import { useAuthState } from "react-firebase-hooks/auth";
 
@@ -19,6 +19,7 @@ import Google from "@mui/icons-material/Google"
 import Stack from "@mui/material/Stack";
 import {addInitialMessages} from "./features/authentication/auth";
 
+// noinspection SpellCheckingInspection
 const firebaseConfig = {
     apiKey: "AIzaSyCJ6lFYmx-88TmCVQq3Ew4hAlmIyvlKffE",
     authDomain: "recipeready-d6aa3.firebaseapp.com",
@@ -26,7 +27,7 @@ const firebaseConfig = {
     storageBucket: "recipeready-d6aa3.appspot.com",
     messagingSenderId: "639862022067",
     appId: "1:639862022067:web:73c7cd8ad0d4c7fadaf5c6",
-    measurementId: "G-Z2Q5HLSE8Q"
+    measurementId: 'G-Z2Q5HLSE8Q'
 };
 
 

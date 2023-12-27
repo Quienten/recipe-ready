@@ -3,9 +3,9 @@ import {getMessageRef} from "../features/authentication/auth";
 import Chat from "./messages/Chat";
 import WhatToCookForm from "./messages/WhatToCookForm";
 import RecipeResponse from "./messages/RecipeResponse";
-import {Box, CircularProgress, Container} from "@mui/material";
+import { CircularProgress, Container} from "@mui/material";
 
-import { collection, query, orderBy, limit, serverTimestamp, doc, setDoc} from "firebase/firestore"
+import {  query, orderBy, limit, serverTimestamp, doc, setDoc} from "firebase/firestore"
 import { useCollectionData } from "react-firebase-hooks/firestore";
 import YouTubeEmbed from "./messages/YouTubeEmbed";
 

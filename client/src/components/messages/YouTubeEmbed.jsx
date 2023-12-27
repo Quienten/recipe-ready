@@ -1,6 +1,5 @@
 import {ButtonGroup, Container, IconButton, Typography} from "@mui/material";
 import React, {useState} from "react";
-import Button from "@mui/material/Button";
 import {ArrowLeft, ArrowRight} from "@mui/icons-material";
 
 function YouTubeEmbed({ vids }) {
