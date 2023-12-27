@@ -1,6 +1,6 @@
-import './App.css';
-import AIChat from "./AIChat"
-import Account from "./Account";
+import './assets/App.css';
+import AIChat from "./components/AIChat"
+import Account from "./components/Account";
 
 import '@fontsource/roboto/300.css';
 import '@fontsource/roboto/400.css';

@@ -1,9 +1,9 @@
-import ChefIcon from './chef.png';
+import ChefIcon from '../../assets/chef.png';
 import { Avatar, Box, Container, Grid } from "@mui/material";
 import { MuiMarkdown } from 'mui-markdown';
 
 //Note that "text" is markdown.
-function ChatMessage(props) {
+function Chat(props) {
     const { text, type } = props.message;
 
     return (
@@ -23,4 +23,4 @@ function ChatMessage(props) {
     )
 }
 
-export default ChatMessage
+export default Chat

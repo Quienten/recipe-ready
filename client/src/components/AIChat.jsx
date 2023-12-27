@@ -1,12 +1,12 @@
 import { useEffect, useState, useRef } from "react";
-import ChatMessage from "./ChatMessage";
-import WhatToCookForm from "./WhatToCookForm";
-import RecipeResponse from "./RecipeResponse";
+import Chat from "./messages/Chat";
+import WhatToCookForm from "./messages/WhatToCookForm";
+import RecipeResponse from "./messages/RecipeResponse";
 import {CircularProgress, Container} from "@mui/material";
 
 import { collection, query, orderBy, limit, serverTimestamp, doc, setDoc} from "firebase/firestore"
 import { useCollectionData } from "react-firebase-hooks/firestore";
-import YouTubeEmbed from "./YouTubeEmbed";
+import YouTubeEmbed from "./messages/YouTubeEmbed";
 
 
 
@@ -66,7 +66,7 @@ function AIChat({ currentUser, db }) {
                 switch(msg.type) {
                     case 'chat':
                     case 'recipe':
-                        return <ChatMessage key={i} message={msg}/>
+                        return <Chat key={i} message={msg}/>
                     case 'what_to_cook':
                         return <WhatToCookForm key={i} uid={uid} addMessage={addMessage} setWaiting={setWaiting} disabled={i !== messages.length - 1}/>
                     case 'youtube_embed':

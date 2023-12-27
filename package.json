@@ -2,7 +2,7 @@
   "name": "recipe-ready",
   "version": "1.0.0",
   "description": "",
-  "main": "server/test_openai.js",
+  "main": "server/index.js",
   "type": "module",
   "scripts": {
     "dev": "node server/index.js"
