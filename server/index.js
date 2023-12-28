@@ -1,4 +1,5 @@
 import express from "express"
+import { cors } from "cors"
 import {cert, initializeApp} from 'firebase-admin/app';
 import {getFirestore, Timestamp} from "firebase-admin/firestore";
 import OpenAI from "openai";
@@ -9,7 +10,10 @@ import {searchYouTube} from "./youtube.js"
 
 const PORT = 3001;
 const app = express();
-app.use(express.json())
+app.use(
+    express.json(),
+    cors({origin: ['http://localhost', 'https://recipeready-d6aa3.web.app/', 'https://recipeready-d6aa3.firebaseapp.com/']})
+)
 
 const openai = new OpenAI({
     apiKey: process.env.OPENAI_API_KEY,

@@ -5,6 +5,7 @@ import Stack from "@mui/material/Stack";
 import DoneIcon from '@mui/icons-material/Done';
 import TextField from '@mui/material/TextField';
 import {Box, Container, Grid, Paper, Typography} from "@mui/material";
+import {URL_WHAT_TO_COOK} from "../../data/constants";
 
 function WhatToCookForm({ uid, setWaiting, disabled }) {
 
@@ -87,7 +88,7 @@ function WhatToCookForm({ uid, setWaiting, disabled }) {
             body: serializedBody
         };
 
-        await fetch('/what_to_cook', fetchOptions)
+        await fetch(URL_WHAT_TO_COOK, fetchOptions)
         setWaiting(false);
     }
 
