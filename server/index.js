@@ -44,7 +44,8 @@ async function addRecipeMessage(uid, content) {
         type: "recipe",
         createdAt: Timestamp.now(),
         text: content,
-        recipe_name: recipeName
+        recipe_name: recipeName,
+        hidden: false
     }
 
     await addMessage(uid, data)
@@ -139,7 +140,8 @@ app.post("/embed_youtube", async (req, res) => {
         type: "youtube_embed",
         createdAt: Timestamp.now(),
         vids: vids,
-        recipe_name: recipe_name
+        recipe_name: recipe_name,
+        hidden: false
     }
 
     await addMessage(uid, data)
@@ -151,7 +153,7 @@ app.post("/embed_youtube", async (req, res) => {
 async function getRecipeChatHistory(uid) {
     const messagesPath = "users/" + uid + "/messages"
     const messagesRef = await db.collection(messagesPath)
-    const q = await messagesRef.orderBy("createdAt").limit(10).get()
+    const q = await messagesRef.where("hidden", "==", "false").orderBy("createdAt", "desc").limit(10).get()
     if(q.empty) {
         console.log("nothing")
     }

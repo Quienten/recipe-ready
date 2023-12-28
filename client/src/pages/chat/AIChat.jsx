@@ -5,7 +5,7 @@ import WhatToCookForm from "../../components/messages/WhatToCookForm";
 import RecipeResponse from "../../components/messages/RecipeResponse";
 import { CircularProgress, Container} from "@mui/material";
 
-import {  query, orderBy, limit, serverTimestamp, doc, setDoc} from "firebase/firestore"
+import {query, orderBy, limit, serverTimestamp, doc, setDoc, where} from "firebase/firestore"
 import { useCollectionData } from "react-firebase-hooks/firestore";
 import YouTubeEmbed from "../../components/messages/YouTubeEmbed";
 
@@ -16,14 +16,18 @@ function AIChat({ currentUser, db }) {
     const { uid } = currentUser
 
     const messagesRef = getMessageRef(db, uid)
-    const q = query(messagesRef, orderBy("createdAt", "desc"), limit(25));
+    const q = query(messagesRef, where("hidden", "==", false), orderBy("createdAt", "desc"), limit(25));
 
     const [messages, loadingMessages, error] = useCollectionData(q) //Database messages
     const [localMessages, setLocalMessages] = useState([]) //Local messages only
 
+    const bottomOfChat = useRef()
+
+    const [waiting, setWaiting] = useState(false) //Used for loading circle.
+
     useEffect(() => {
         if(loadingMessages || messages.length === 0) return
-        let type = messages[messages.length - 1].type
+        let type = messages[0].type //Newest message is index 0
         if(type === "recipe" || type === "youtube_embed") { //If the most recent change is a recipe
             setLocalMessages([{type: "recipe_response"}]) //Add recipe response bar
         } else {
@@ -33,12 +37,16 @@ function AIChat({ currentUser, db }) {
     }, [messages, loadingMessages, setLocalMessages]);
 
     useEffect(() => {
+        if(waiting) {
+            setLocalMessages([]) //Remove recipe response bar
+        }
+    }, [waiting])
+
+    useEffect(() => {
         bottomOfChat.current.scrollIntoView({ behavior: "smooth" }) //Scroll to bottom of chat
     }, [localMessages])
 
-    const bottomOfChat = useRef()
 
-    const [waiting, setWaiting] = useState(false) //Used for loading circle.
 
     //Add a message to the database. Passed to children components.
     const addMessage = async(type, text="") => {
@@ -46,7 +54,8 @@ function AIChat({ currentUser, db }) {
         let data = {
             author: "ai",
             type: type,
-            createdAt: serverTimestamp()
+            createdAt: serverTimestamp(),
+            hidden: false,
         }
 
         //Add text for chat messages
@@ -56,6 +65,8 @@ function AIChat({ currentUser, db }) {
 
         await setDoc(doc(messagesRef), data) //Create new doc with msg data
     }
+
+    console.log(messages)
 
     return (<>
         <Container component="main">
@@ -81,7 +92,7 @@ function AIChat({ currentUser, db }) {
             {localMessages && localMessages.map((msg, i) => {
                 switch(msg.type) {
                     case 'recipe_response':
-                        return <RecipeResponse key={i + messages.length /* Offset indexes by messages */ } addMessage={addMessage} setWaiting={setWaiting} uid={uid} prevMsgType={messages[messages.length - 1].type} />
+                        return <RecipeResponse key={i + messages.length /* Offset indexes by messages */ } addMessage={addMessage} setWaiting={setWaiting} uid={uid} prevMsgType={messages[0].type} />
                     default:
                         return
                 }

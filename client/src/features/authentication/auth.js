@@ -13,10 +13,12 @@ export async function addInitialMessages(db, uid) {
         author: "ai",
         type: "chat",
         text: FIRST_MSG,
-        createdAt: serverTimestamp()
+        createdAt: serverTimestamp(),
+        hidden: false
     })
     await setDoc(doc(messagesRef), {
         type: "what_to_cook",
         createdAt: serverTimestamp(),
+        hidden: false
     })
 }
