@@ -1,13 +1,13 @@
 import { useEffect, useState, useRef } from "react";
-import {getMessageRef} from "../features/authentication/auth";
-import Chat from "./messages/Chat";
-import WhatToCookForm from "./messages/WhatToCookForm";
-import RecipeResponse from "./messages/RecipeResponse";
+import {getMessageRef} from "../../features/authentication/auth";
+import Chat from "../../components/messages/Chat";
+import WhatToCookForm from "../../components/messages/WhatToCookForm";
+import RecipeResponse from "../../components/messages/RecipeResponse";
 import { CircularProgress, Container} from "@mui/material";
 
 import {  query, orderBy, limit, serverTimestamp, doc, setDoc} from "firebase/firestore"
 import { useCollectionData } from "react-firebase-hooks/firestore";
-import YouTubeEmbed from "./messages/YouTubeEmbed";
+import YouTubeEmbed from "../../components/messages/YouTubeEmbed";
 
 
 
@@ -16,7 +16,7 @@ function AIChat({ currentUser, db }) {
     const { uid } = currentUser
 
     const messagesRef = getMessageRef(db, uid)
-    const q = query(getMessageRef(db, uid), orderBy("createdAt", "desc"), limit(25));
+    const q = query(messagesRef, orderBy("createdAt", "desc"), limit(25));
 
     const [messages, loadingMessages, error] = useCollectionData(q) //Database messages
     const [localMessages, setLocalMessages] = useState([]) //Local messages only
@@ -60,7 +60,9 @@ function AIChat({ currentUser, db }) {
     return (<>
         <Container component="main">
 
-            {loadingMessages && <CircularProgress /> /* Wait for database query */}
+            {loadingMessages && <Container sx={{display: 'flex', justifyContent: 'center'}}>
+                <CircularProgress />
+            </Container> /* Wait for database query */}
             {messages && messages.reverse().map((msg, i) => {
                 if(msg.hidden) return
                 switch(msg.type) {

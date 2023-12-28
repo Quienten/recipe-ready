@@ -1,6 +1,8 @@
 import './assets/App.css';
-import AIChat from "./components/AIChat"
+import {useState} from "react";
+import AIChat from "./pages/chat/AIChat"
 import Account from "./components/Account";
+import RecipesPage from "./pages/recipes/RecipesPage";
 
 import '@fontsource/roboto/300.css';
 import '@fontsource/roboto/400.css';
@@ -13,7 +15,7 @@ import { getFirestore } from "firebase/firestore"
 import { getAnalytics } from "firebase/analytics";
 import { useAuthState } from "react-firebase-hooks/auth";
 
-import {Box, createTheme, ThemeProvider} from "@mui/material"
+import {Box, createTheme, Tab, Tabs, ThemeProvider} from "@mui/material"
 import Button from "@mui/material/Button";
 import Google from "@mui/icons-material/Google"
 import Stack from "@mui/material/Stack";
@@ -47,6 +49,13 @@ function App() {
 
     const [user] = useAuthState(auth)
 
+    const [selectedTab, setSelectedTab] = useState(0)
+
+    const tabsComponents = [
+        <AIChat currentUser={auth.currentUser} db={db}/>,
+        <RecipesPage currentUser={auth.currentUser} db={db}/>,
+    ]
+
     return (
         <ThemeProvider theme={darkTheme}>
             <div className="App">
@@ -60,8 +69,13 @@ function App() {
                     }
                 </header>
 
-                <section>
-                    {user ? <AIChat currentUser={auth.currentUser} db={db}/> : <SignIn/>}
+                <Tabs component="navbar" value={selectedTab} onChange={(e, newValue) => {setSelectedTab(newValue)}}>
+                    <Tab label="Chat" sx={{width: 1/2}} disabled={!user}/>
+                    <Tab label="Recipes" sx={{width: 1/2}} disabled={!user}/>
+                </Tabs>
+
+                 <section>
+                     {user ? tabsComponents[selectedTab] : <SignIn/>}
                 </section>
 
                 <Box component={"footer"}/>

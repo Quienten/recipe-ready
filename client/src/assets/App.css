@@ -24,6 +24,27 @@ body {
   box-sizing: border-box;
 }
 
+.App navbar {
+  background-color: #181717;
+  height: 5vh;
+  min-height: 50px;
+  color: white;
+  position: fixed;
+  width: 100%;
+  max-width: 728px;
+  top: 10vh;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  z-index: 99;
+  box-sizing: border-box;
+}
+
+/* Make sure the tabs take up the height of the nav bar */
+.App navbar div {
+    height: 100%;
+}
+
 .App section {
   display: flex;
   flex-direction: column;
@@ -34,8 +55,8 @@ body {
 
 main {
   padding: 10px;
-  height: 85vh;
-  margin: 10vh 0 5vh;
+  height: 80vh;
+  margin: 15vh 0 5vh;
   overflow-y: scroll;
   display: flex;
   flex-direction: column;
@@ -106,14 +127,6 @@ button:disabled {
   margin: 0 auto;
 }
 
-
-
-
-/*ul, li {*/
-/*  text-align: left;*/
-/*  list-style: none;*/
-/*}*/
-
 p {
   max-width: 500px;
   margin-bottom: 12px;
@@ -125,7 +138,7 @@ p {
   text-align: center;
 }
 
-.message {
+.message, .saved-recipe {
   color: white;
 }
 
