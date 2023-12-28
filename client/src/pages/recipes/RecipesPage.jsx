@@ -14,8 +14,6 @@ function RecipesPage({ currentUser, db }) {
     const q = query(getMessageRef(db, uid), where("type", "==", "recipe"), orderBy("createdAt"));
     const [recipes, loadingRecipes, error] = useCollectionData(q) //Database recipes
 
-    console.log(recipes)
-
     const [selectedRecipe, setSelectedRecipe] = useState(null)
 
     return (

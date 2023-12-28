@@ -30,7 +30,7 @@ function AIChat({ currentUser, db }) {
             setLocalMessages([]) //Remove recipe response bar
         }
         bottomOfChat.current.scrollIntoView({ behavior: "smooth" }) //Scroll to bottom of chat
-    }, [messages]);
+    }, [messages, loadingMessages, setLocalMessages]);
 
     useEffect(() => {
         bottomOfChat.current.scrollIntoView({ behavior: "smooth" }) //Scroll to bottom of chat
@@ -63,7 +63,7 @@ function AIChat({ currentUser, db }) {
             {loadingMessages && <Container sx={{display: 'flex', justifyContent: 'center'}}>
                 <CircularProgress />
             </Container> /* Wait for database query */}
-            {messages && messages.reverse().map((msg, i) => {
+            {messages && messages.toReversed().map((msg, i) => {
                 if(msg.hidden) return
                 switch(msg.type) {
                     case 'chat':
@@ -72,7 +72,9 @@ function AIChat({ currentUser, db }) {
                     case 'what_to_cook':
                         return <WhatToCookForm key={i} uid={uid} addMessage={addMessage} setWaiting={setWaiting} disabled={waiting || i !== messages.length - 1}/>
                     case 'youtube_embed':
-                        return <YouTubeEmbed vids={msg.vids}/>
+                        return <YouTubeEmbed key={i} vids={msg.vids}/>
+                    default:
+                        return
                 }
             })}
 
@@ -80,6 +82,8 @@ function AIChat({ currentUser, db }) {
                 switch(msg.type) {
                     case 'recipe_response':
                         return <RecipeResponse key={i + messages.length /* Offset indexes by messages */ } addMessage={addMessage} setWaiting={setWaiting} uid={uid} prevMsgType={messages[messages.length - 1].type} />
+                    default:
+                        return
                 }
             })}
             
