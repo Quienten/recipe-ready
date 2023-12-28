@@ -1,5 +1,5 @@
 import express from "express"
-import { cors } from "cors"
+import cors from "cors"
 import {cert, initializeApp} from 'firebase-admin/app';
 import {getFirestore, Timestamp} from "firebase-admin/firestore";
 import OpenAI from "openai";
