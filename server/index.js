@@ -2,6 +2,7 @@ import express from "express"
 import {cert, initializeApp} from 'firebase-admin/app';
 import {getFirestore, Timestamp} from "firebase-admin/firestore";
 import OpenAI from "openai";
+import {URL_ANOTHER, URL_WHAT_TO_COOK} from "../client/src/data/constants.js";
 import {ANOTHER_PROMPT, ASSISTANT_DESCRIPTION, WHAT_TO_COOK_PROMPT} from "./constants.js";
 import serviceAccount from "../recipeready-d6aa3-c85f3ebc56d3.json" assert {type: "json"}
 
@@ -50,7 +51,7 @@ async function addRecipeMessage(uid, content) {
     await addMessage(uid, data)
 }
 
-app.post('/what_to_cook', async (req, res) => {
+app.post(URL_WHAT_TO_COOK, async (req, res) => {
     console.log(req.body)
 
     const uid = req.body["uid"]
@@ -90,7 +91,7 @@ app.post('/what_to_cook', async (req, res) => {
     res.json({ok:true})
 })
 
-app.post("/another", async (req, res) => {
+app.post(URL_ANOTHER, async (req, res) => {
 
     console.log(req.body)
 
