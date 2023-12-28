@@ -3,7 +3,7 @@ import {cert, initializeApp} from 'firebase-admin/app';
 import {getFirestore, Timestamp} from "firebase-admin/firestore";
 import OpenAI from "openai";
 import {ANOTHER_PROMPT, ASSISTANT_DESCRIPTION, WHAT_TO_COOK_PROMPT} from "./constants.js";
-import serviceAccount from "./keys/recipeready-d6aa3-c85f3ebc56d3.json" assert {type: "json"}
+import serviceAccount from "../recipeready-d6aa3-c85f3ebc56d3.json" assert {type: "json"}
 
 import {searchYouTube} from "./youtube.js"
 
