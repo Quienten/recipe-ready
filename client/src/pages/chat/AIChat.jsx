@@ -82,8 +82,10 @@ function AIChat({ currentUser, db }) {
                         return <RecipeResponse key={i + messages.length /* Offset indexes by messages */ } addMessage={addMessage} setWaiting={setWaiting} uid={uid} prevMsgType={messages[messages.length - 1].type} />
                 }
             })}
-
-            {waiting && <CircularProgress /> /* Wait for OpenAI query */}
+            
+            {waiting && <Container sx={{display: 'flex', justifyContent: 'center'}}>
+                <CircularProgress />
+            </Container> /* Wait for OpenAI query */}
 
             <div ref={bottomOfChat}></div>
 

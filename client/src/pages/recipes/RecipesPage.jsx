@@ -19,7 +19,7 @@ function RecipesPage({ currentUser, db }) {
     const [selectedRecipe, setSelectedRecipe] = useState(null)
 
     return (
-        <>
+        <Container component="main">
             {loadingRecipes && <Container sx={{display: 'flex', justifyContent: 'center'}}>
                 <CircularProgress />
             </Container> /* Wait for database query */}
@@ -32,7 +32,7 @@ function RecipesPage({ currentUser, db }) {
                 </Box>
             </>}
             {(selectedRecipe === null)? <RecipeList recipes={recipes} setSelectedRecipe={setSelectedRecipe} /> : <Recipe recipe={selectedRecipe} setSelectedRecipe={setSelectedRecipe}/>}
-        </>
+        </Container>
     )
 }
 

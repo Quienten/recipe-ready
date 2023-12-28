@@ -9,8 +9,8 @@ function Recipe({ recipe, setSelectedRecipe }) {
     const { text } = recipe
 
     return (
-        <Container sx={{my: "15vh"}} className="saved-recipe">
-            <Box sx={{ px: 2, py: 2, borderRadius: 5, borderTopLeftRadius: 0, backgroundColor: "#222" }}>
+        <Container className="saved-recipe">
+            <Box sx={{ my: 2, px: 2, py: 2, borderRadius: 10, backgroundColor: "#222" }}>
                 <IconButton aria-label="back" onClick={(e) => {setSelectedRecipe(null)}}>
                     <ArrowBackIosNewIcon />
                 </IconButton>

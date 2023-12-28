@@ -1,16 +1,17 @@
 import { yellow } from '@mui/material/colors';
 import StarIcon from "@mui/icons-material/Star";
+import StarBorderIcon from '@mui/icons-material/StarBorder';
 import {Divider, ListItem, ListItemButton, ListItemIcon, ListItemText} from "@mui/material";
 
 function RecipeListItem({ recipe, setSelectedRecipe }) {
 
-    const { recipe_name, text, createdAt } = recipe
+    const { recipe_name, saved } = recipe
 
     return (<>
         <ListItem disablePadding>
             <ListItemButton onClick={(e) => {setSelectedRecipe(recipe)}}>
                 <ListItemIcon>
-                    <StarIcon sx={{ color: yellow[600] }}/>
+                    {saved ? <StarIcon sx={{ color: yellow[600] }}/> : <StarBorderIcon/>}
                 </ListItemIcon>
                 <ListItemText primary={recipe_name} />
             </ListItemButton>
