@@ -1,7 +1,7 @@
 import { Container } from "@mui/material";
 import Stack from "@mui/material/Stack";
 import Button from "@mui/material/Button";
-import {URL_EMBED_YOUTUBE} from "../../data/constants";
+import {URL_ANOTHER, URL_EMBED_YOUTUBE} from "../../data/constants";
 
 function RecipeResponse({ addMessage, setWaiting, uid, prevMsgType }) {
 
@@ -19,7 +19,7 @@ function RecipeResponse({ addMessage, setWaiting, uid, prevMsgType }) {
             body: serializedBody
         };
 
-        await fetch("/another", fetchOptions)
+        await fetch(URL_ANOTHER, fetchOptions)
         setWaiting(false);
     }
 
