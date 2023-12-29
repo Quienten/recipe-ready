@@ -66,8 +66,6 @@ function AIChat({ currentUser, db }) {
         await setDoc(doc(messagesRef), data) //Create new doc with msg data
     }
 
-    console.log(messages)
-
     return (<>
         <Container component="main">
 

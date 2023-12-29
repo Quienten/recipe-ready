@@ -12,7 +12,7 @@ const PORT = 3001;
 const app = express();
 app.use(
     express.json(),
-    cors({origin: ['http://localhost', 'https://recipeready-d6aa3.web.app/', 'https://recipeready-d6aa3.firebaseapp.com/']})
+    cors()
 )
 
 const openai = new OpenAI({
