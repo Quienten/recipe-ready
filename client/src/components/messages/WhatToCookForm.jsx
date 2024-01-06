@@ -9,8 +9,6 @@ import {URL_WHAT_TO_COOK} from "../../data/constants";
 
 function WhatToCookForm({ uid, setWaiting, disabled }) {
 
-    const [name, setName] = useState("")
-
     const [skillLevel, setSkillLevel] = useState(1)
 
     const defaultApplianceData = [
@@ -30,6 +28,10 @@ function WhatToCookForm({ uid, setWaiting, disabled }) {
     const [ingredients, setIngredients] = useState("")
 
     const handleAppliance = (event, index) => {
+
+        //Return if trying to disable to last checked appliance.
+        if(checkedAppliances.length === 1 && applianceData[index].selected) return;
+
         const updatedApplianceData = applianceData.map((elem, i) => {
             if (i === index) {
                 // Flip selected
@@ -55,7 +57,6 @@ function WhatToCookForm({ uid, setWaiting, disabled }) {
 
 
     function validateData() {
-        if(name === "") return false
         if(checkedAppliances.length < 1) return false
         if(ingredients === "") return false
         return true
@@ -71,7 +72,6 @@ function WhatToCookForm({ uid, setWaiting, disabled }) {
         }
 
         const formData = {
-            name: name,
             skillLevel: skillLevel,
             appliances: checkedAppliances,
             mealType: mealOptions[mealSelected],
@@ -109,18 +109,6 @@ function WhatToCookForm({ uid, setWaiting, disabled }) {
                     className="what-to-cook"
                 >
                     <Grid container spacing={2}>
-                        <Grid item xs={12}>
-                            <TextField
-                                label="Name"
-                                variant="standard"
-                                value={name}
-                                onChange={(e) => {
-                                    setName(e.target.value)
-                                }}
-                                fullWidth
-                                disabled={disabled}
-                            />
-                        </Grid>
                         <Grid item xs={5}>
                             <Typography align="left"> Cooking Skill Level: </Typography>
                         </Grid>
