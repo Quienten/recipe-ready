@@ -6,6 +6,7 @@ import DoneIcon from '@mui/icons-material/Done';
 import TextField from '@mui/material/TextField';
 import {Box, Container, Grid, Paper, Typography} from "@mui/material";
 import {URL_WHAT_TO_COOK} from "../../data/constants";
+import ingredientList from "../../data/ingredients.json";
 
 function WhatToCookForm({ uid, setWaiting, disabled }) {
 
@@ -92,6 +93,28 @@ function WhatToCookForm({ uid, setWaiting, disabled }) {
         setWaiting(false);
     }
 
+    function randomIngredients() {
+        let randomIngredients = []
+        for(let i = 0; i < 4; i++) {
+            let index = Math.floor(Math.random() * ingredientList.ingredients.length);
+            if(randomIngredients.includes(ingredientList.ingredients[index])) {
+                i--;
+                continue;
+            }
+            randomIngredients.push(ingredientList.ingredients[index]);
+        }
+
+        let formattedIngredients = "";
+
+        for(let i = 0; i < randomIngredients.length; i++) {
+            formattedIngredients += randomIngredients[i] + ", "
+        }
+
+        formattedIngredients = formattedIngredients.substring(0, formattedIngredients.length - 2)
+
+        setIngredients(formattedIngredients)
+    }
+
     return (
         <Container
             spacing={0}
@@ -169,19 +192,29 @@ function WhatToCookForm({ uid, setWaiting, disabled }) {
                                 })}
                             </Box>
                         </Grid>
-                        <Grid item xs={5}>
-                            <Typography align="left">What ingredients do you have?</Typography>
-                        </Grid>
-                        <Grid item xs={7}>
+                        {/*<Grid item xs={3}>*/}
+                        {/*    <Typography align="left">What ingredients do you have?</Typography>*/}
+                        {/*</Grid>*/}
+                        <Grid item xs={10}>
                             <TextField
                                 label="Ingredients"
                                 variant="standard"
                                 value={ingredients}
                                 onChange={handleIngredients}
-                                fullWidth
+                                sx={{width: 9/10, ml: 3}}
                                 required
                                 disabled={disabled}
                             />
+                        </Grid>
+                        <Grid item xs={2}>
+                            <Button
+                                variant="outlined"
+                                disabled={disabled}
+                                sx={{mt: 1.5}}
+                                onClick={randomIngredients}
+                            >
+                                Random
+                            </Button>
                         </Grid>
                         <Grid item xs={12}>
                             <Button
