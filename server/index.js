@@ -3,7 +3,7 @@ import cors from "cors"
 import {cert, initializeApp} from 'firebase-admin/app';
 import {getFirestore, Timestamp} from "firebase-admin/firestore";
 import OpenAI from "openai";
-import {ANOTHER_PROMPT, ASSISTANT_DESCRIPTION, WHAT_TO_COOK_PROMPT} from "./constants.js";
+import {ANOTHER_PROMPT, ASSISTANT_DESCRIPTION, WHAT_TO_COOK_PROMPT, BAD_INGREDIENTS_MESSAGE} from "./constants.js";
 import serviceAccount from "../recipeready-d6aa3-c85f3ebc56d3.json" assert {type: "json"}
 
 import {searchYouTube} from "./youtube.js"
@@ -34,6 +34,9 @@ function getAIMessage(prompt) {
 function getRecipeName(str) {
     let findRecipeName = /\*\*([^*]*(?:\*(?!\*)[^*]*)*)\*\*/g;
     let results = str.match(findRecipeName)
+    if(results == null) {
+        return null
+    }
     if(results.length > 0) {
         return results[0].replaceAll("**", "") //Remove bold markdown
     }
@@ -42,6 +45,10 @@ function getRecipeName(str) {
 
 async function addRecipeMessage(uid, content) {
     let recipeName = getRecipeName(content)
+
+    if(recipeName == null) {
+        return promptInvalidRecipe(uid)
+    }
 
     let data = {
         author: "ai",
@@ -53,6 +60,25 @@ async function addRecipeMessage(uid, content) {
     }
 
     await addMessage(uid, data)
+}
+
+async function promptInvalidRecipe(uid) {
+    let chatData = {
+        author: "ai",
+        type: "chat",
+        createdAt: Timestamp.now(),
+        text: BAD_INGREDIENTS_MESSAGE,
+        hidden: false
+    }
+    await addMessage(uid, chatData)
+
+    let whatToCookData = {
+        author: "ai",
+        type: "what_to_cook",
+        createdAt: Timestamp.now(),
+        hidden: false,
+    }
+    await addMessage(uid, whatToCookData)
 }
 
 app.post("/what_to_cook", async (req, res) => {
